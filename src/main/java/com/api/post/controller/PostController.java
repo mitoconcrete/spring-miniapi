@@ -4,14 +4,16 @@ import com.api.post.dto.PostRequestDto;
 import com.api.post.dto.PostResponseDto;
 import com.api.post.entity.Post;
 import com.api.post.service.PostService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class PostController {
-    PostService postService;
+    private final PostService postService;
     @GetMapping("/api/posts")
     public List<Post> getPosts(){
         return postService.getPosts();
@@ -32,7 +34,7 @@ public class PostController {
         return new PostResponseDto(postService.updatePost(id, postRequestDto));
     }
 
-    @DeleteMapping("/api/post/{id}")
+    @DeleteMapping("/api/posts/{id}")
     public HttpStatus deletePost(@PathVariable Long id){
         postService.deletePost(id);
         return HttpStatus.OK;

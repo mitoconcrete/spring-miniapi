@@ -3,14 +3,16 @@ package com.api.post.service;
 import com.api.post.dto.PostRequestDto;
 import com.api.post.entity.Post;
 import com.api.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
-    PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
     public List<Post> getPosts(){
@@ -33,8 +35,11 @@ public class PostService {
 
     @Transactional
     public Post updatePost(Long id, PostRequestDto postRequestDto){
-        return postRepository.findByIdAndPassword(id, postRequestDto.getPassword()).orElseThrow(
+        Post post = postRepository.findByIdAndPassword(id, postRequestDto.getPassword()).orElseThrow(
                 () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
+        post.update(postRequestDto);
+        postRepository.save(post);
+        return post;
     }
 
     @Transactional
