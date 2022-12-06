@@ -38,4 +38,5 @@ public class Post extends Timestamped{
     public void update(PostRequestDto postRequestDto){
         this.contents = postRequestDto.getContents();
     }
+
 }

@@ -30,4 +30,10 @@ public class PostService {
                 () -> new IllegalArgumentException("게시물이 없습니다.")
         );
     }
+
+    @Transactional
+    public Post updatePost(Long id, PostRequestDto postRequestDto){
+        return postRepository.findByIdAndPassword(id, postRequestDto.getPassword()).orElseThrow(
+                () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
+    }
 }

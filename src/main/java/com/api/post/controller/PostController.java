@@ -17,13 +17,17 @@ public class PostController {
     }
 
     @PostMapping("/api/posts")
-    public Post createPost(@RequestBody PostRequestDto postRequestDto){
-        return postService.createPost(postRequestDto);
+    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto){
+        return new PostResponseDto(postService.createPost(postRequestDto));
     }
 
     @GetMapping("/api/posts/{id}")
     public PostResponseDto getPost(@PathVariable Long id){
-        Post post = postService.getPostById(id);
-        return new PostResponseDto(post);
+        return new PostResponseDto(postService.getPostById(id));
+    }
+
+    @PutMapping("/api/posts/{id}")
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
+        return new PostResponseDto(postService.updatePost(id, postRequestDto));
     }
 }
