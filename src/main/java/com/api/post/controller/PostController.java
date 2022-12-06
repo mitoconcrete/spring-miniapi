@@ -1,12 +1,10 @@
 package com.api.post.controller;
 
 import com.api.post.dto.PostRequestDto;
+import com.api.post.dto.PostResponseDto;
 import com.api.post.entity.Post;
 import com.api.post.service.PostService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +19,11 @@ public class PostController {
     @PostMapping("/api/posts")
     public Post createPost(@RequestBody PostRequestDto postRequestDto){
         return postService.createPost(postRequestDto);
+    }
+
+    @GetMapping("/api/posts/{id}")
+    public PostResponseDto getPost(@PathVariable Long id){
+        Post post = postService.getPostById(id);
+        return new PostResponseDto(post);
     }
 }

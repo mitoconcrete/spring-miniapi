@@ -23,4 +23,11 @@ public class PostService {
         postRepository.save(post);
         return post;
     }
+
+    @Transactional(readOnly = true)
+    public Post getPostById(Long id){
+        return postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("게시물이 없습니다.")
+        );
+    }
 }
