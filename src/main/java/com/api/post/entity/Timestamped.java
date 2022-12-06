@@ -9,7 +9,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
-//@Getter
+@Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class Timestamped {
