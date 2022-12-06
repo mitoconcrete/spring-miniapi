@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.CredentialException;
 import java.net.http.HttpResponse;
 import java.util.List;
 
@@ -39,17 +40,17 @@ public class PostController {
     public ResponseEntity updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         try{
             return new ResponseEntity(new PostResponseDto(postService.updatePost(id, postRequestDto)), HttpStatus.OK);
-        }catch (IllegalArgumentException e){
+        }catch (IllegalArgumentException | CredentialException e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/api/posts/{id}")
-    public HttpStatus deletePost(@PathVariable Long id){
+    public HttpStatus deletePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         try{
-            postService.deletePost(id);
+            postService.deletePost(id, postRequestDto);
             return HttpStatus.OK;
-        }catch (IllegalArgumentException e){
+        }catch (IllegalArgumentException | CredentialException e){
             return HttpStatus.BAD_REQUEST;
         }
     }

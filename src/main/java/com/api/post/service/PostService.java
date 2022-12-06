@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.auth.login.CredentialException;
 import java.util.List;
 
 @Service
@@ -36,18 +37,28 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long id, PostRequestDto postRequestDto) {
-        Post post = postRepository.findByIdAndPassword(id, postRequestDto.getPassword()).orElseThrow(
+    public Post updatePost(Long id, PostRequestDto postRequestDto) throws CredentialException {
+        Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
+
+        if(!post.getPassword().equals(postRequestDto.getPassword())){
+            throw new CredentialException("패스워드가 일치하지 않습니다.");
+        }
+
         post.update(postRequestDto);
         postRepository.save(post);
         return post;
     }
 
     @Transactional
-    public void deletePost(Long id) {
+    public void deletePost(Long id, PostRequestDto postRequestDto) throws CredentialException{
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
+
+        if(!post.getPassword().equals(postRequestDto.getPassword())){
+            throw new CredentialException("패스워드가 일치하지 않습니다.");
+        }
+
         postRepository.delete(post);
     }
 }
