@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.CredentialException;
-import java.net.http.HttpResponse;
 import java.util.List;
 
 @RestController
@@ -28,20 +27,20 @@ public class PostController {
     }
 
     @GetMapping("/api/posts/{id}")
-    public ResponseEntity getPost(@PathVariable Long id){
+    public ResponseEntity<Object> getPost(@PathVariable Long id){
         try{
-        return new ResponseEntity(new PostResponseDto(postService.getPost(id)), HttpStatus.OK);
+        return new ResponseEntity<>(new PostResponseDto(postService.getPost(id)), HttpStatus.OK);
         }catch (IllegalArgumentException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/api/posts/{id}")
-    public ResponseEntity updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
+    public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         try{
-            return new ResponseEntity(new PostResponseDto(postService.updatePost(id, postRequestDto)), HttpStatus.OK);
+            return new ResponseEntity<>(new PostResponseDto(postService.updatePost(id, postRequestDto)), HttpStatus.OK);
         }catch (IllegalArgumentException | CredentialException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
