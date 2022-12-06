@@ -25,7 +25,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Post getPostById(Long id){
+    public Post getPost(Long id){
         return postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시물이 없습니다.")
         );
@@ -35,5 +35,10 @@ public class PostService {
     public Post updatePost(Long id, PostRequestDto postRequestDto){
         return postRepository.findByIdAndPassword(id, postRequestDto.getPassword()).orElseThrow(
                 () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
+    }
+
+    @Transactional
+    public void deletePost(Long id){
+        postRepository.deleteById(id);
     }
 }
