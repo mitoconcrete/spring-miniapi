@@ -13,21 +13,22 @@ import javax.security.auth.login.CredentialException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-    @GetMapping("/api/posts")
+    @GetMapping("/posts")
     public ResponseEntity<Object> getPosts(){
         return
                 ResponseEntity.ok(postService.getPosts());
     }
 
-    @PostMapping("/api/posts")
+    @PostMapping("/posts")
     public ResponseEntity<Object> createPost(@RequestBody PostRequestDto postRequestDto){
         return ResponseEntity.ok(new PostResponseDto(postService.createPost(postRequestDto)));
     }
 
-    @GetMapping("/api/posts/{id}")
+    @GetMapping("/posts/{id}")
     public ResponseEntity<Object> getPost(@PathVariable Long id){
         try{
         return ResponseEntity.ok(new PostResponseDto(postService.getPost(id)));
@@ -36,7 +37,7 @@ public class PostController {
         }
     }
 
-    @PutMapping("/api/posts/{id}")
+    @PutMapping("/posts/{id}")
     public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         try{
             return ResponseEntity.ok(new PostResponseDto(postService.updatePost(id, postRequestDto)));
@@ -45,7 +46,7 @@ public class PostController {
         }
     }
 
-    @DeleteMapping("/api/posts/{id}")
+    @DeleteMapping("/posts/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         try{
             postService.deletePost(id, postRequestDto);
