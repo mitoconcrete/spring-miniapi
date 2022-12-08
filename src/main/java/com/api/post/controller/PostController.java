@@ -17,40 +17,41 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     @GetMapping("/api/posts")
-    public List<Post> getPosts(){
-        return postService.getPosts();
+    public ResponseEntity<Object> getPosts(){
+        return
+                ResponseEntity.ok(postService.getPosts());
     }
 
     @PostMapping("/api/posts")
-    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto){
-        return new PostResponseDto(postService.createPost(postRequestDto));
+    public ResponseEntity<Object> createPost(@RequestBody PostRequestDto postRequestDto){
+        return ResponseEntity.ok(new PostResponseDto(postService.createPost(postRequestDto)));
     }
 
     @GetMapping("/api/posts/{id}")
     public ResponseEntity<Object> getPost(@PathVariable Long id){
         try{
-        return new ResponseEntity<>(new PostResponseDto(postService.getPost(id)), HttpStatus.OK);
+        return ResponseEntity.ok(new PostResponseDto(postService.getPost(id)));
         }catch (IllegalArgumentException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PutMapping("/api/posts/{id}")
     public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         try{
-            return new ResponseEntity<>(new PostResponseDto(postService.updatePost(id, postRequestDto)), HttpStatus.OK);
+            return ResponseEntity.ok(new PostResponseDto(postService.updatePost(id, postRequestDto)));
         }catch (IllegalArgumentException | CredentialException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/api/posts/{id}")
-    public HttpStatus deletePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
+    public ResponseEntity<Object> deletePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto){
         try{
             postService.deletePost(id, postRequestDto);
-            return HttpStatus.OK;
+            return ResponseEntity.ok("delete complete");
         }catch (IllegalArgumentException | CredentialException e){
-            return HttpStatus.BAD_REQUEST;
+            return ResponseEntity.badRequest().body("delete fail : " + e.getMessage());
         }
     }
 }
