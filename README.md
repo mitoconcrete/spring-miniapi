@@ -1,15 +1,324 @@
 # 작은 스프링 API 제작프로젝트
 
 ## Use case
-![유스케이스](./usecase.png)
+<p align="center"><img src="./usecase.png"></p>
+
+## ERD
+<p align="center"><img src="./프로젝트ERD.png"></p>
 
 ## API 명세
-| 기능           | Method | URL             | Request              | Response     | 요구사항                                      |
-|--------------|--------|-----------------|----------------------|--------------|-------------------------------------------|
-| 전체 게시글 목록 조회 | GET    | /api/posts      |                      | 게시글 리스트      | 제목, 작성자명, 작성내용, 작성날짜 조회 + 작성날짜 기준 내림차순 정렬 |
-| 게시글 작성       | POST   | /api/posts      | 제목, 작성자명, 비밀번호, 작성내용 | 게시글          | 제목, 작성자명, 비밀번호, 작성내용을 저장하고, 저장된 게시글을 반환하기 |
-| 선택한 게시글 조회   | GET    | /api/posts/{id} |                      | 게시글          | 선택한 게시글의 제목, 작성자명, 작성날짜, 작성 내용            |
-| 선택한 게시글 삭제   | DELETE | /api/posts/{id} | 비밀번호                 | 200 Response | 서버에서 비밀번호 여부를 판단한 뒤, 성공응답 받기              |
-| 선택한 게시글 수정   | PUT    | /api/posts/{id} | 수정 데이터, 비밀번호         | 수정된 게시글      | 서버에서 비밀번호 여부를 판단한 뒤, 수정된 게시글을 반환하기        |
+`/api/posts`
+<table>
+<tr>
+<td> Method </td>
+<td> Description </td>
+<td> Request </td>
+<td> Response </td>
+</tr>
+<tr>
+<td>GET</td>
+<td>모든 게시물을 가져옵니다.</td>
+<td>
+    
+ * **Header**
+```
+Authorization : Bearer {JWT}
+``` 
 
+ * **Payload**
+```
+-
+```
+
+</td>
+<td>
+<p style="color: greenyellow">200 OK</p>
+
+
+    [{
+        "id" : Long,
+        "user" : { "id" : Long, "username" : String },
+        "title" : String,
+        "contents" : String,
+        modifiedAt : LocalDateTime
+    }, ...]
+
+<p style="color: red">401 UNAUTHORIZED</p>
+
+    {
+        "status" : "Unauthorized",
+        "message" : 인증 토큰이 유효하지 않습니다.
+    }
+
+</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>하나의 게시물을 가져옵니다.</td>
+<td>
+
+* **Header**
+```
+Authorization : Bearer {JWT}
+``` 
+
+* **Payload**
+```
+pathvariable 
+ex: /api/posts/{id}
+```
+
+</td>
+<td>
+<p style="color: greenyellow">200 OK</p>
+
+    {
+        "id" : Long,
+        "title" : String,
+        "contents" : String,
+        modifiedAt : LocalDateTime
+    }
+
+<p style="color: red">401 UNAUTHORIZED</p>
+
+    {
+        "status" : "Unauthorized",
+        "message" : 인증 토큰이 유효하지 않습니다.
+    }
+
+<p style="color: red">404 NOT FOUND</p>
+
+    {
+        "status" : "Not Found",
+        "message" : 데이터를 찾을 수 없습니다.
+    }
+
+</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>게시물을 등록합니다.</td>
+<td>
+
+* **Header**
+```
+Authorization : Bearer {JWT}
+``` 
+
+* **Payload**
+```
+Content-Type
+application/json
+{
+    "title" : String,
+    "contents" : String,
+}
+```
+
+</td>
+<td>
+<p style="color: greenyellow">201 CREATED</p>
+
+    {
+        "id" : Long,
+        "title" : String,
+        "contents" : String,
+        modifiedAt : LocalDateTime
+    }
+
+<p style="color: red">400 BAD REQUEST</p>
+
+    {
+        "status" : "Bad Request",
+        "message" : {{reason of bad request}}
+    }
+
+<p style="color: red">401 UNAUTHORIZED</p>
+
+    {
+        "status" : "Unauthorized",
+        "message" : 인증 토큰이 유효하지 않습니다.
+    }
+
+</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>하나의 게시물을 수정합니다.</td>
+<td>
+
+* **Header**
+```
+Authorization : Bearer {JWT}
+``` 
+
+* **Payload**
+```
+pathvariable 
+ex: /api/posts/{id}
+
+Content-Type
+application/json
+{ 
+    password : String
+    contents : String
+}
+```
+
+</td>
+<td>
+<p style="color: greenyellow">200 OK</p>
+
+    {
+        "id" : Long,
+        "user" : { "id" : Long, "username" : String },
+        "title" : String,
+        "contents" : String,
+        modifiedAt : LocalDateTime
+    }
+
+<p style="color: red">400 BAD REQUEST</p>
+
+    {
+        "status" : "Bad Request",
+        "message" : {{reason of bad request}}
+    }
+
+<p style="color: red">401 UNAUTHORIZED</p>
+
+    {
+        "status" : "Unauthorized",
+        "message" : 인증 토큰이 유효하지 않습니다.
+    }
+
+
+<p style="color: red">404 NOT FOUND</p>
+
+    {
+        "status" : "Not Found",
+        "message" : 데이터를 찾을 수 없습니다.
+    }
+
+</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>하나의 게시물을 삭제합니다.</td>
+<td>
+
+* **Header**
+```
+Authorization : Bearer {JWT}
+``` 
+
+* **Payload**
+```
+pathvariable 
+ex: /api/posts/{id}
+```
+
+</td>
+<td>
+<p style="color: greenyellow">200 OK</p>
+
+
+<p style="color: red">401 UNAUTHORIZED</p>
+
+    {
+        "status" : "Unauthorized",
+        "message" : 인증 토큰이 유효하지 않습니다.
+    }
+
+<p style="color: red">400 BAD REQUEST</p>
+
+    {
+        "status" : "Bad Request",
+        "message" : {{reason of bad request}}
+    }
+ 
+<p style="color: red">404 NOT FOUND</p>
+
+    {
+        "status" : "Not Found",
+        "message" : 데이터를 찾을 수 없습니다.
+    }
+
+</td>
+</tr>
+</table>
+
+`/api/signup`
+<table>
+<tr>
+<td>Method</td><td>Description</td><td>Request</td><td>Response</td>
+<tr>
+<td>POST</td>
+<td>회원가입</td>
+<td>
+
+* **Payload**
+```
+Content-Type
+application/json
+{
+    "username" : String,
+    "password" : String
+}
+```
+
+</td>
+<td>
+<p style="color: greenyellow">201 CREATED</p>
+
+    {
+        "id" : Long,
+        "username" : String
+    }
+
+<p style="color: red">400 BAD REQUEST</p>
+
+    {
+        "status" : "Bad Request",
+        "message" : {{reason of bad request}} // 동일한 유저네임이 존재합니다.
+    }
+
+</td>
+</tr>
+</table>
+
+`/api/signin`
+<table>
+<tr>
+<td> Method </td> <td> Description </td> <td> Request </td> <td> Response </td>
+<tr>
+<td>POST</td>
+<td>로그인</td>
+<td>
+
+* **Payload**
+```
+Content-Type
+application/json
+{
+    "username" : String,
+    "password" : String
+}
+```
+
+</td>
+<td>
+<p style="color: greenyellow">200 OK</p>
+
+서버에서 발급한 JWT Token 이 헤더에 셋팅되어 전달됩니다.
+
+<p style="color: red">400 BAD REQUEST</p>
+
+    {
+        "status" : "Bad Request",
+        "message" : {{reason of bad request}} // 동일한 유저네임이 존재합니다.
+    }
+
+</td>
+</tr>
+</table>
 
