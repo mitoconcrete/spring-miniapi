@@ -7,12 +7,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 public class PostResponseDto {
-    private String title;
-    private String writer;
-    private String contents;
-    private LocalDateTime modifiedAt;
+    private final String title;
+    private final String writer;
+    private final String contents;
+    private final LocalDateTime modifiedAt;
 
     public PostResponseDto(Post post) {
         this.title = post.getTitle();

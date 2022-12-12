@@ -2,14 +2,11 @@ package com.api.post.controller;
 
 import com.api.post.dto.PostRequestDto;
 import com.api.post.dto.PostResponseDto;
-import com.api.post.entity.Post;
 import com.api.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.login.CredentialException;
 import java.util.List;
 
 @RestController
