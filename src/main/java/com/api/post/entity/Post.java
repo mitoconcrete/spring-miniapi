@@ -26,7 +26,6 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private String contents;
 
-    // DI
     public Post(PostRequestDto postRequestDto){
         this.title = postRequestDto.getTitle();
         this.writer = postRequestDto.getWriter();
@@ -34,9 +33,5 @@ public class Post extends Timestamped{
         this.contents = postRequestDto.getContents();
     }
 
-    // DI
-    public void update(PostRequestDto postRequestDto){
-        this.contents = postRequestDto.getContents();
-    }
-
+    public void updateContents(String contents) {this.contents = contents;}
 }

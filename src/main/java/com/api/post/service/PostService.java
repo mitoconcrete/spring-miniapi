@@ -45,7 +45,7 @@ public class PostService {
             throw new CredentialException("패스워드가 일치하지 않습니다.");
         }
 
-        post.update(postRequestDto);
+        post.updateContents(postRequestDto.getContents());
         postRepository.save(post);
         return post;
     }
