@@ -4,12 +4,9 @@ import com.api.post.dto.PostRequestDto;
 import com.api.post.entity.Post;
 import com.api.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.CredentialException;
 import java.util.List;
 
 @Service
