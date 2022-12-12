@@ -37,12 +37,12 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long id, PostRequestDto postRequestDto) throws CredentialException {
+    public Post updatePost(Long id, PostRequestDto postRequestDto) throws IllegalArgumentException {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
 
-        if(!post.getPassword().equals(postRequestDto.getPassword())){
-            throw new CredentialException("패스워드가 일치하지 않습니다.");
+        if(!post.isValidPassword(postRequestDto.getPassword())){
+            throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
 
         post.updateContents(postRequestDto.getContents());
@@ -51,12 +51,12 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long id, PostRequestDto postRequestDto) throws CredentialException{
+    public void deletePost(Long id, PostRequestDto postRequestDto) throws IllegalArgumentException{
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
 
-        if(!post.getPassword().equals(postRequestDto.getPassword())){
-            throw new CredentialException("패스워드가 일치하지 않습니다.");
+        if(!post.isValidPassword(postRequestDto.getPassword())){
+            throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
 
         postRepository.delete(post);

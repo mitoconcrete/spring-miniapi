@@ -34,4 +34,6 @@ public class Post extends Timestamped{
     }
 
     public void updateContents(String contents) {this.contents = contents;}
+
+    public boolean isValidPassword(String comparePassword) {return this.password.equals(comparePassword);}
 }
