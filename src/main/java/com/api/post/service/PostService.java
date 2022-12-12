@@ -15,44 +15,45 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
-    public List<Post> getPosts() {
-        return postRepository.findAllByOrderByModifiedAtDesc();
+    public List<PostResponseDto> getPosts() {
+        return postRepository.findAllByOrderByModifiedAtDesc().stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional
-    public Post createPost(PostRequestDto postRequestDto) {
+    public PostResponseDto createPost(PostRequestDto postRequestDto) {
         Post post = new Post(postRequestDto);
         postRepository.save(post);
-        return post;
+        return new PostResponseDto(post);
     }
 
     @Transactional(readOnly = true)
-    public Post getPost(Long id) {
-        return postRepository.findById(id).orElseThrow(
+    public PostResponseDto getPost(Long id) {
+        return new PostResponseDto(postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("게시물이 없습니다.")
-        );
+        ));
     }
 
     @Transactional
-    public Post updatePost(Long id, PostRequestDto postRequestDto) throws IllegalArgumentException {
+    public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto){
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
 
-        if(!post.isValidPassword(postRequestDto.getPassword())){
+        if(post.isPasswordValid(postRequestDto.getPassword())){
             throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
 
         post.updateContents(postRequestDto.getContents());
         postRepository.save(post);
-        return post;
+
+        return new PostResponseDto(post);
     }
 
     @Transactional
-    public void deletePost(Long id, PostRequestDto postRequestDto) throws IllegalArgumentException{
+    public void deletePost(Long id, PostRequestDto postRequestDto){
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
 
-        if(!post.isValidPassword(postRequestDto.getPassword())){
+        if(post.isPasswordValid(postRequestDto.getPassword())){
             throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
 
