@@ -47,7 +47,7 @@ public class PostService implements PostServiceInterface{
 
     @Override
     @Transactional(readOnly = true)
-    public PostResponseDto getPost(Long id, PostRequestDto postRequestDto) {
+    public PostResponseDto getPost(Long id) {
         return new PostResponseDto(postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("post not exist.")
         ));

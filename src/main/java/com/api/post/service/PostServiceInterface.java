@@ -9,7 +9,7 @@ import java.util.List;
 public interface PostServiceInterface {
     List<PostResponseDto> getPosts();
     PostResponseDto createPost(PostRequestDto postRequestDto, HttpServletRequest request);
-    PostResponseDto getPost(Long id, PostRequestDto postRequestDto);
+    PostResponseDto getPost(Long id);
     PostResponseDto updatePost(Long id, PostRequestDto postRequestDto, HttpServletRequest request);
     void deletePost(Long id, HttpServletRequest request);
 }
