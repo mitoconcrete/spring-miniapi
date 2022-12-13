@@ -16,12 +16,14 @@ public class UserController {
     private final UserService userService;
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUpUser(@RequestBody @Valid UserRequestDto userRequestDto){
+    public String signUpUser(@RequestBody @Valid UserRequestDto userRequestDto){
         userService.createUser(userRequestDto);
+        return "new user create complete.";
     }
 
     @PostMapping("/signin")
-    public void signInUser(@RequestBody UserRequestDto userRequestDto, HttpServletResponse response){
+    public String signInUser(@RequestBody UserRequestDto userRequestDto, HttpServletResponse response){
         userService.signInUser(userRequestDto, response);
+        return "login complete.";
     }
 }
