@@ -18,9 +18,6 @@ public class Post extends Timestamped{
     private String title;
 
     @Column(nullable = false)
-    private String writer;
-
-    @Column(nullable = false)
     private String contents;
 
     @ManyToOne
