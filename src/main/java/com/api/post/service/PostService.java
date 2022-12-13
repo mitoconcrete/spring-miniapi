@@ -19,17 +19,19 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostService implements PostServiceInterface{
     private final PostRepository postRepository;
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
+    @Override
     @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
         return postRepository.findAllByOrderByModifiedAtDesc().stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
     public PostResponseDto createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
         // get validate user.
