@@ -7,18 +7,15 @@ import org.hibernate.validator.constraints.ConstraintComposition;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Getter
 @RequiredArgsConstructor
 public class UserRequestDto {
 
-    @Min(value = 4, message = "username required more than 4 letters.")
-    @Max(value = 10, message = "username required less than 10 letters.")
-    @Pattern(regexp = "[a-z0-9]]",message = "username only use alphabet lowercase, and 0-9 numbers.")
+    @Pattern(regexp = "[a-z0-9]{4,10}$", message = "username use alphabet lowercase and numbers. And letter length 4 to 10")
     private final String username;
 
-    @Min(value = 8, message = "username required more than 8 letters.")
-    @Max(value = 15, message = "username required less than 15 letters.")
-    @Pattern(regexp = "[a-zA-Z0-9]]",message = "username only use alphabet, and 0-9 numbers.")
+    @Pattern(regexp = "[a-zA-Z0-9]{8,15}$", message = "password use alphabet and 0-9 numbers. And letter length 8 to 15")
     private final String password;
 }
