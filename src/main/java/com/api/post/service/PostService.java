@@ -45,35 +45,43 @@ public class PostService implements PostServiceInterface{
         return new PostResponseDto(post);
     }
 
+    @Override
     @Transactional(readOnly = true)
-    public PostResponseDto getPost(Long id) {
+    public PostResponseDto getPost(Long id, PostRequestDto postRequestDto) {
         return new PostResponseDto(postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시물이 없습니다.")
+                () -> new IllegalArgumentException("post not exist.")
         ));
     }
 
+    @Override
     @Transactional
-    public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto){
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
+    public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto, HttpServletRequest request) {
+        // get authorized user.
+        User user = getValidUserFromRequestHeader(request);
 
-        if(post.isPasswordValid(postRequestDto.getPassword())){
-            throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
-        }
+        // find post what authorized user write with match id.
+        Post post = postRepository.findByIdAndUser(id, user).orElseThrow(
+                () -> new IllegalArgumentException("post not exist."));
 
+        // update contents.
         post.updateContents(postRequestDto.getContents());
         postRepository.save(post);
 
+        // response update post.
         return new PostResponseDto(post);
     }
 
+    @Override
     @Transactional
-    public void deletePost(Long id, PostRequestDto postRequestDto){
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
+    public void deletePost(Long id, HttpServletRequest request) {
+        // get authorized user
+        User user = getValidUserFromRequestHeader(request);
 
-        // TODO: TOKEN 검증
+        // find post what authorized user write with match id.
+        Post post = postRepository.findByIdAndUser(id, user).orElseThrow(
+                () -> new IllegalArgumentException("post not exist."));
 
+        // remove post.
         postRepository.delete(post);
     }
 
