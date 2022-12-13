@@ -12,9 +12,12 @@ public class PostResponseDto {
     private final String contents;
     private final LocalDateTime modifiedAt;
 
+    private final String username;
+
     public PostResponseDto(Post post) {
         this.title = post.getTitle();
         this.contents = post.getContents();
         this.modifiedAt = post.getModifiedAt();
+        this.username = post.getUser().getUsername();
     }
 }
