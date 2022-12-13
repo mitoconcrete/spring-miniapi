@@ -24,9 +24,9 @@ public class Post extends Timestamped{
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Post(PostRequestDto postRequestDto, User user) {
-        this.title = postRequestDto.getTitle();
-        this.contents = postRequestDto.getContents();
+    public Post(String title, String contents, User user) {
+        this.title = title;
+        this.contents = contents;
         this.user = user;
     }
 

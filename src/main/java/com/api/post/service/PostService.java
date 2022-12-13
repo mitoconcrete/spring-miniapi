@@ -3,11 +3,17 @@ package com.api.post.service;
 import com.api.post.dto.PostRequestDto;
 import com.api.post.dto.PostResponseDto;
 import com.api.post.entity.Post;
+import com.api.post.entity.User;
 import com.api.post.repository.PostRepository;
+import com.api.post.repository.UserRepository;
+import com.api.post.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,14 +22,23 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
 
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
+
     @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
         return postRepository.findAllByOrderByModifiedAtDesc().stream().map(PostResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional
-    public PostResponseDto createPost(PostRequestDto postRequestDto) {
-        Post post = new Post(postRequestDto);
+    public PostResponseDto createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
+        // get validate user.
+        User user = getValidUserFromRequestHeader(request);
+
+        // create new post.
+        Post post = new Post(postRequestDto.getTitle(), postRequestDto.getContents(), user);
+
+        //
         postRepository.save(post);
         return new PostResponseDto(post);
     }
