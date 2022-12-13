@@ -38,7 +38,7 @@ public class PostService {
         // create new post.
         Post post = new Post(postRequestDto.getTitle(), postRequestDto.getContents(), user);
 
-        //
+        // request new post to client.
         postRepository.save(post);
         return new PostResponseDto(post);
     }
