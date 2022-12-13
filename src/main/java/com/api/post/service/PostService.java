@@ -70,10 +70,23 @@ public class PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당되는 게시물이 존재하지 않습니다."));
 
-        if(post.isPasswordValid(postRequestDto.getPassword())){
-            throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
-        }
+        // TODO: TOKEN 검증
 
         postRepository.delete(post);
+    }
+
+    // check user authorization and get user instance.
+    public User getValidUserFromRequestHeader(HttpServletRequest request){
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+        if(jwtUtil.validateToken(token)){
+            claims = jwtUtil.getUserInfoFromToken(token);
+        }else{
+            throw new IllegalArgumentException("token is invalid");
+        }
+
+        return userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                () -> new IllegalArgumentException("not exist user.")
+        );
     }
 }
