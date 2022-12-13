@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RequestMapping("/api")
@@ -19,4 +20,9 @@ public class UserController {
     public void createUser(@RequestBody @Valid UserRequestDto userRequestDto){
         userService.createUser(userRequestDto);
     }
-}
+
+    @PostMapping("/signin")
+    public void signInUser(@RequestBody UserRequestDto userRequestDto, HttpServletResponse response){
+        userService.signInUser(userRequestDto, response);
+    }
+    {}}

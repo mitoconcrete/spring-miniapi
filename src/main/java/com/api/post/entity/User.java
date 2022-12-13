@@ -30,4 +30,8 @@ public class User extends Timestamped{
         this.username = username;
         this.password = password;
     }
+
+    public boolean isPasswordValid(String password) {
+        return this.password.equals(password);
+    }
 }
