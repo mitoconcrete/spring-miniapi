@@ -27,10 +27,10 @@ public class Post extends Timestamped{
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Post(PostRequestDto postRequestDto) {
+    public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
-        this.writer = postRequestDto.getWriter();
         this.contents = postRequestDto.getContents();
+        this.user = user;
     }
 
     public void updateContents(String contents) {this.contents = contents;}

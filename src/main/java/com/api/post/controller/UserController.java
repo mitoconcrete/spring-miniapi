@@ -17,6 +17,6 @@ public class UserController {
     private final UserService userService;
     @PostMapping("/signup")
     public void createUser(@RequestBody @Valid UserRequestDto userRequestDto){
-        System.out.println(userRequestDto.getUsername());
+        userService.createUser(userRequestDto);
     }
 }

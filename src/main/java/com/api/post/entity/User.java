@@ -1,17 +1,19 @@
 package com.api.post.entity;
 
-import org.intellij.lang.annotations.Pattern;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor
+@Table(name = "users")
 public class User extends Timestamped{
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -21,7 +23,11 @@ public class User extends Timestamped{
     private String password;
 
     @OneToMany(mappedBy = "user")
-    private List<Post> posts = new ArrayList<>();
+    private final List<Post> posts = new ArrayList<>();
 
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
