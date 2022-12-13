@@ -39,7 +39,7 @@ public class JwtUtil {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
-        return null;
+        throw new IllegalArgumentException("no token in request.");
     }
 
     public String createToken(String username) {
