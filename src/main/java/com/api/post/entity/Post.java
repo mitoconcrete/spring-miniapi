@@ -18,22 +18,20 @@ public class Post extends Timestamped{
     private String title;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
     private String writer;
 
     @Column(nullable = false)
     private String contents;
 
-    public Post(PostRequestDto postRequestDto){
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Post(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.writer = postRequestDto.getWriter();
-        this.password = postRequestDto.getPassword();
         this.contents = postRequestDto.getContents();
     }
 
     public void updateContents(String contents) {this.contents = contents;}
-
-    public boolean isPasswordValid(String comparePassword) {return !this.password.equals(comparePassword);}
 }
