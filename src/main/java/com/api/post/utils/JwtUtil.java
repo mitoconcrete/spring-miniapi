@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import io.jsonwebtoken.security.SignatureException;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
@@ -60,7 +61,7 @@ public class JwtUtil {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
             throw new IllegalArgumentException("Invalid JWT signature.");
         } catch (ExpiredJwtException e) {
             throw new IllegalArgumentException("Expired JWT token");
