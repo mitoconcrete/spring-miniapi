@@ -98,7 +98,7 @@ public class PostService implements PostServiceInterface{
         if(jwtUtil.validateToken(token)){
             claims = jwtUtil.getUserInfoFromToken(token);
         }else{
-            throw new IllegalArgumentException("token is invalid");
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
 
         return userRepository.findByUsername(claims.getSubject()).orElseThrow(
