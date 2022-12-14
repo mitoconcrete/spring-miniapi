@@ -52,12 +52,12 @@ public class CommentService implements CommentServiceInterface{
             throw new IllegalArgumentException("access denied : need admin authority.");
         }
 
-        // get post in db
+        // get post in db.
         Post post = postRepository.findByIdAndUser(postId, user).orElseThrow(
                 () -> new IllegalArgumentException("not exist post.")
         );
 
-        // get comment in db
+        // get comment in db.
         Comment comment = commentRepository.findByIdAndPost(commentId, post).orElseThrow(
                 () -> new IllegalArgumentException("not exist comment.")
         );
@@ -73,7 +73,21 @@ public class CommentService implements CommentServiceInterface{
     @Override
     @Transactional
     public void deleteComment(Long postId, Long commentId, HttpServletRequest request) {
+        // get authorized user.
+        User user = getValidUserFromRequestHeader(request);
 
+        // get post in db.
+        Post post = postRepository.findByIdAndUser(postId, user).orElseThrow(
+                () -> new IllegalArgumentException("not exist post.")
+        );
+
+        // get comment in db..
+        Comment comment = commentRepository.findByIdAndPost(commentId, post).orElseThrow(
+                () -> new IllegalArgumentException("not exist comment.")
+        );
+
+        // delete comment.
+        commentRepository.delete(comment);
     }
 
     public User getValidUserFromRequestHeader(HttpServletRequest request){
