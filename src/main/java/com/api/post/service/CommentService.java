@@ -54,7 +54,7 @@ public class CommentService implements CommentServiceInterface{
         );
 
         // get comment in db.
-        Comment comment = commentRepository.findByIdAndPost(commentId, post).orElseThrow(
+        Comment comment = commentRepository.findByIdAndPost_Id(commentId, post.getId()).orElseThrow(
                 () -> new IllegalArgumentException("not exist comment.")
         );
 
@@ -82,7 +82,7 @@ public class CommentService implements CommentServiceInterface{
         );
 
         // get comment in db..
-        Comment comment = commentRepository.findByIdAndPost(commentId, post).orElseThrow(
+        Comment comment = commentRepository.findByIdAndPost_Id(commentId, post.getId()).orElseThrow(
                 () -> new IllegalArgumentException("not exist comment.")
         );
 
