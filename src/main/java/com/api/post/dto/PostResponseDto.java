@@ -1,9 +1,7 @@
 package com.api.post.dto;
 
-import com.api.post.entity.Comment;
 import com.api.post.entity.Post;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
