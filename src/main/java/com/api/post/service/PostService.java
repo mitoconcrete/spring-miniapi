@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService implements PostServiceInterface{
     private final PostRepository postRepository;
-
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
