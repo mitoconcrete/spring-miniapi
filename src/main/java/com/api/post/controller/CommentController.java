@@ -16,12 +16,12 @@ public class CommentController {
     private final CommentService commentService;
     @PostMapping("/posts/{postId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentResponseDto createComment(@PathVariable Long postId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
+    public CommentResponseDto createComment(@PathVariable Long postId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
         return commentService.createComment(postId, commentRequestDto, request);
     }
 
     @PutMapping("/posts/{postId}/comments/{commentId}")
-    public CommentResponseDto updateComment(@PathVariable Long postId, @PathVariable Long commentId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
+    public CommentResponseDto updateComment(@PathVariable Long postId, @PathVariable Long commentId,@RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
         return commentService.updateComment(postId, commentId, commentRequestDto, request);
     }
 
