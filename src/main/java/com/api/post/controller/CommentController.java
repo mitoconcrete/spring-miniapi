@@ -26,7 +26,7 @@ public class CommentController {
     }
 
 
-    @DeleteMapping("/comments/{postId}/comments/{commentId}")
+    @DeleteMapping("/posts/{postId}/comments/{commentId}")
     public String deleteComment(@PathVariable Long postId,@PathVariable Long commentId ,HttpServletRequest request) {
         commentService.deleteComment(postId, commentId, request);
         return "comment remove complete.";
