@@ -17,11 +17,18 @@ public class UserService implements UserServiceInterface {
     private final JwtUtil jwtUtil;
     @Override
     public void createUser(UserRequestDto userRequestDto) {
+        // check same user in db.
         boolean isExist = userRepository.existsByUsername(userRequestDto.getUsername());
+
+        // if exist same user, return error.
         if(isExist){
             throw new IllegalArgumentException("user already exist.");
         }
-        User user = new User(userRequestDto.getUsername(), userRequestDto.getPassword());
+
+        // if not exist user in db, create new user by name, p/w, role.
+        User user = new User(userRequestDto.getUsername(), userRequestDto.getPassword(), userRequestDto.getRole());
+
+        // save in db.
         userRepository.save(user);
     }
 
