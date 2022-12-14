@@ -53,7 +53,7 @@ public class CommentService implements CommentServiceInterface{
         }
 
         // get post in db.
-        Post post = postRepository.findByIdAndUser(postId, user).orElseThrow(
+        Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("not exist post.")
         );
 
@@ -61,6 +61,10 @@ public class CommentService implements CommentServiceInterface{
         Comment comment = commentRepository.findByIdAndPost(commentId, post).orElseThrow(
                 () -> new IllegalArgumentException("not exist comment.")
         );
+
+        if(!comment.isAuthor(user)){
+            throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
+        }
 
         // update comment's contents.
         comment.updateContents(commentRequestDto.getContents());
@@ -76,8 +80,12 @@ public class CommentService implements CommentServiceInterface{
         // get authorized user.
         User user = getValidUserFromRequestHeader(request);
 
+        if(!user.isAdmin()){
+            throw new IllegalArgumentException("access denied : need admin authority.");
+        }
+
         // get post in db.
-        Post post = postRepository.findByIdAndUser(postId, user).orElseThrow(
+        Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("not exist post.")
         );
 
@@ -85,6 +93,10 @@ public class CommentService implements CommentServiceInterface{
         Comment comment = commentRepository.findByIdAndPost(commentId, post).orElseThrow(
                 () -> new IllegalArgumentException("not exist comment.")
         );
+
+        if(!comment.isAuthor(user)){
+            throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
+        }
 
         // delete comment.
         commentRepository.delete(comment);
