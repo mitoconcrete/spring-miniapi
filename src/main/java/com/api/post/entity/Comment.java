@@ -35,6 +35,6 @@ public class Comment extends Timestamped{
     }
 
     public boolean isAuthor(User user){
-        return !this.user.equals(user);
+        return this.user.equals(user);
     }
 }
