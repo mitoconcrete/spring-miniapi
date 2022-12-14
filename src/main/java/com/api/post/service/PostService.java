@@ -58,8 +58,12 @@ public class PostService implements PostServiceInterface{
         User user = getValidUserFromRequestHeader(request);
 
         // find post what authorized user write with match id.
-        Post post = postRepository.findByIdAndUser(id, user).orElseThrow(
+        Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("post not exist."));
+
+        if(!post.isAuthor(user)){
+            throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
+        }
 
         // update contents.
         post.updateContents(postRequestDto.getContents());
@@ -76,8 +80,12 @@ public class PostService implements PostServiceInterface{
         User user = getValidUserFromRequestHeader(request);
 
         // find post what authorized user write with match id.
-        Post post = postRepository.findByIdAndUser(id, user).orElseThrow(
+        Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("post not exist."));
+
+        if(!post.isAuthor(user)){
+            throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
+        }
 
         // remove post.
         postRepository.delete(post);
