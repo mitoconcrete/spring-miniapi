@@ -48,10 +48,6 @@ public class CommentService implements CommentServiceInterface{
         // get authorized user.
         User user = getValidUserFromRequestHeader(request);
 
-        if(!user.isAdmin()){
-            throw new IllegalArgumentException("access denied : need admin authority.");
-        }
-
         // get post in db.
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("not exist post.")
@@ -62,7 +58,7 @@ public class CommentService implements CommentServiceInterface{
                 () -> new IllegalArgumentException("not exist comment.")
         );
 
-        if(!comment.isAuthor(user)){
+        if(!user.isAdmin() || !comment.isAuthor(user)){
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
         }
 
@@ -80,10 +76,6 @@ public class CommentService implements CommentServiceInterface{
         // get authorized user.
         User user = getValidUserFromRequestHeader(request);
 
-        if(!user.isAdmin()){
-            throw new IllegalArgumentException("access denied : need admin authority.");
-        }
-
         // get post in db.
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("not exist post.")
@@ -94,7 +86,7 @@ public class CommentService implements CommentServiceInterface{
                 () -> new IllegalArgumentException("not exist comment.")
         );
 
-        if(!comment.isAuthor(user)){
+        if(!user.isAdmin() || !comment.isAuthor(user)){
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
         }
 
