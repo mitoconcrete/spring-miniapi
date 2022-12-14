@@ -30,12 +30,12 @@ public class CommentService implements CommentServiceInterface{
         User user = getValidUserFromRequestHeader(request);
 
         // get user's post.
-        Post post = postRepository.findByIdAndUser(postId, user).orElseThrow(
+        Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("not exist post.")
         );
 
         // create new comment and attach to post.
-        Comment comment = new Comment(commentRequestDto.getContents(), post);
+        Comment comment = new Comment(post, user, commentRequestDto.getContents());
 
         // save comment.
         commentRepository.save(comment);
