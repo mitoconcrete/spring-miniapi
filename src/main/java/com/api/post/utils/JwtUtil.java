@@ -62,14 +62,9 @@ public class JwtUtil {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException | SignatureException e) {
-            throw new IllegalArgumentException("Invalid JWT signature.");
-        } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException("Expired JWT token");
-        } catch (UnsupportedJwtException e) {
-            throw new IllegalArgumentException("Unsupported JWT token");
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("JWT claims is empty");
+        } catch (SecurityException | MalformedJwtException | SignatureException | ExpiredJwtException |
+                 UnsupportedJwtException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
     }
 

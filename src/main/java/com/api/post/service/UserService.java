@@ -22,7 +22,7 @@ public class UserService implements UserServiceInterface {
 
         // if exist same user, return error.
         if(isExist){
-            throw new IllegalArgumentException("user already exist.");
+            throw new IllegalArgumentException("중복된 username 입니다.");
         }
 
         // if not exist user in db, create new user by name, p/w, role.
@@ -36,12 +36,12 @@ public class UserService implements UserServiceInterface {
     public void signInUser(UserRequestDto userRequestDto, HttpServletResponse response) {
         // check in db
         User user = userRepository.findByUsername(userRequestDto.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("not exist username.")
+                () -> new IllegalArgumentException("회원을 찾을 수 없습니다.")
         );
 
         // check password
         if(!user.isPasswordValid(userRequestDto.getPassword())){
-            throw new IllegalArgumentException("password invalid.");
+            throw new IllegalArgumentException("회원을 찾을 수 없습니다.");
         }
 
         // token set in response header
