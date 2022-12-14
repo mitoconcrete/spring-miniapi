@@ -14,21 +14,21 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
-    @PostMapping("/comments/{postId}")
+    @PostMapping("/posts/{postId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public CommentResponseDto createComment(@PathVariable Long postId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
         return commentService.createComment(postId, commentRequestDto, request);
     }
 
-    @PutMapping("/comments/{postId}")
-    public CommentResponseDto updateComment(@PathVariable Long postId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
-        return commentService.updateComment(postId, commentRequestDto, request);
+    @PutMapping("/posts/{postId}/comments/{commentId}")
+    public CommentResponseDto updateComment(@PathVariable Long postId, @PathVariable Long commentId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
+        return commentService.updateComment(postId, commentId, commentRequestDto, request);
     }
 
 
-    @DeleteMapping("/comments/{postId}")
-    public String deleteComment(@PathVariable Long postId, HttpServletRequest request) {
-        commentService.deleteComment(postId, request);
+    @DeleteMapping("/comments/{postId}/comments/{commentId}")
+    public String deleteComment(@PathVariable Long postId,@PathVariable Long commentId ,HttpServletRequest request) {
+        commentService.deleteComment(postId, commentId, request);
         return "comment remove complete.";
     }
 }
