@@ -1,6 +1,5 @@
 package com.api.post.entity;
 
-import com.api.post.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
