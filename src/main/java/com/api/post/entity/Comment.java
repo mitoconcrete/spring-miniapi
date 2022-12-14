@@ -20,12 +20,21 @@ public class Comment extends Timestamped{
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    public Comment(String contents, Post post) {
-        this.contents = contents;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Comment(Post post, User user, String contents) {
         this.post = post;
+        this.user = user;
+        this.contents = contents;
     }
 
     public void updateContents(String contents) {
         this.contents = contents;
+    }
+
+    public boolean isAuthor(User user){
+        return !this.user.equals(user);
     }
 }
