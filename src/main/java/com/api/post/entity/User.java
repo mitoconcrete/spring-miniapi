@@ -39,4 +39,8 @@ public class User extends Timestamped{
     public boolean isPasswordValid(String password) {
         return this.password.equals(password);
     }
+
+    public boolean isAdmin(){
+        return this.role == UserRoleEnum.ADMIN;
+    }
 }
