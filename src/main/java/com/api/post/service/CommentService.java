@@ -58,7 +58,7 @@ public class CommentService implements CommentServiceInterface{
                 () -> new IllegalArgumentException("not exist comment.")
         );
 
-        if(!user.isAdmin() || !comment.isAuthor(user)){
+        if(!user.isAdmin() && !comment.isAuthorIdMatchUserId(user.getId())){
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
         }
 
@@ -86,7 +86,7 @@ public class CommentService implements CommentServiceInterface{
                 () -> new IllegalArgumentException("not exist comment.")
         );
 
-        if(!user.isAdmin() || !comment.isAuthor(user)){
+        if(!user.isAdmin() && !comment.isAuthorIdMatchUserId(user.getId())){
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
         }
 

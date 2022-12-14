@@ -61,7 +61,8 @@ public class PostService implements PostServiceInterface{
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("post not exist."));
 
-        if(!user.isAdmin() || !post.isAuthor(user)){
+        System.out.println(post.getUser().getId() + " " + user.getId() + !post.isAuthorIdMatchUserId(user.getId()));
+        if(!user.isAdmin() && !post.isAuthorIdMatchUserId(user.getId())){
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
         }
 
@@ -83,7 +84,7 @@ public class PostService implements PostServiceInterface{
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("post not exist."));
 
-        if(!user.isAdmin() || !post.isAuthor(user)){
+        if(!user.isAdmin() && !post.isAuthorIdMatchUserId(user.getId())){
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
         }
 
