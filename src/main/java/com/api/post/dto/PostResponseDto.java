@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class PostResponseDto {
@@ -16,13 +17,13 @@ public class PostResponseDto {
 
     private final String username;
 
-    private final List<Comment> comments;
+    private final List<CommentResponseDto> comments;
 
     public PostResponseDto(Post post) {
         this.title = post.getTitle();
         this.contents = post.getContents();
         this.modifiedAt = post.getModifiedAt();
         this.username = post.getUser().getUsername();
-        this.comments = post.getComments();
+        this.comments = post.getComments().stream().map(CommentResponseDto::new).collect(Collectors.toList());
     }
 }
