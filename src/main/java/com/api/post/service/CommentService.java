@@ -44,13 +44,35 @@ public class CommentService implements CommentServiceInterface{
 
     @Override
     @Transactional
-    public CommentResponseDto updateComment(Long postId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
-        return null;
+    public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
+        // get authorized user.
+        User user = getValidUserFromRequestHeader(request);
+
+        if(!user.isAdmin()){
+            throw new IllegalArgumentException("access denied : need admin authority.");
+        }
+
+        // get post in db
+        Post post = postRepository.findByIdAndUser(postId, user).orElseThrow(
+                () -> new IllegalArgumentException("not exist post.")
+        );
+
+        // get comment in db
+        Comment comment = commentRepository.findByIdAndPost(commentId, post).orElseThrow(
+                () -> new IllegalArgumentException("not exist comment.")
+        );
+
+        // update comment's contents.
+        comment.updateContents(commentRequestDto.getContents());
+
+        // save
+        commentRepository.save(comment);
+        return new CommentResponseDto(comment);
     }
 
     @Override
     @Transactional
-    public void deleteComment(Long postId, HttpServletRequest request) {
+    public void deleteComment(Long postId, Long commentId, HttpServletRequest request) {
 
     }
 
