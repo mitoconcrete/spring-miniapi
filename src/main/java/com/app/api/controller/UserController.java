@@ -2,7 +2,7 @@ package com.app.api.controller;
 
 import com.app.api.dto.request.SignInRequestDto;
 import com.app.api.dto.request.SignUpRequestDto;
-import com.app.api.dto.response.SignInResponseDto;
+import com.app.api.dto.response.AuthorizedResponse;
 import com.app.api.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Api(tags = "작성자")
@@ -30,7 +29,7 @@ public class UserController {
 
     @ApiOperation(value = "로그인", notes = "아이디, 패스워드를 입력하여 로그인을 시도합니다.<br>로그인에 성공하면 응답헤더에 토큰이 발급됩니다.<br>다음 요청부터 ")
     @PostMapping("/signin")
-    public SignInResponseDto signInUser(@RequestBody SignInRequestDto userRequestDto){
-        return new SignInResponseDto(HttpStatus.OK, "로그인에 성공했습니다",  userService.signInUser(userRequestDto));
+    public AuthorizedResponse signInUser(@RequestBody SignInRequestDto userRequestDto){
+        return new AuthorizedResponse(HttpStatus.OK, "로그인에 성공했습니다",  userService.signInUser(userRequestDto));
     }
 }
