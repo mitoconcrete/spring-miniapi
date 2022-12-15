@@ -1,6 +1,6 @@
 package com.app.api.service;
 
-import com.app.api.dto.UserRequestDto;
+import com.app.api.dto.request.UserRequestDto;
 
 import javax.servlet.http.HttpServletResponse;
 

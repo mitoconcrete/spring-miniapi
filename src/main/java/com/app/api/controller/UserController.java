@@ -1,6 +1,6 @@
 package com.app.api.controller;
 
-import com.app.api.dto.UserRequestDto;
+import com.app.api.dto.request.UserRequestDto;
 import com.app.api.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

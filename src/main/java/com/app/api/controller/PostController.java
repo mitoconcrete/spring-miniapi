@@ -1,7 +1,7 @@
 package com.app.api.controller;
 
-import com.app.api.dto.PostRequestDto;
-import com.app.api.dto.PostResponseDto;
+import com.app.api.dto.request.PostRequestDto;
+import com.app.api.dto.response.PostResponseDto;
 import com.app.api.service.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

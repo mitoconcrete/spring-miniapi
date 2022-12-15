@@ -1,7 +1,7 @@
 package com.app.api.service;
 
-import com.app.api.dto.PostRequestDto;
-import com.app.api.dto.PostResponseDto;
+import com.app.api.dto.request.PostRequestDto;
+import com.app.api.dto.response.PostResponseDto;
 import com.app.api.entity.Post;
 import com.app.api.entity.User;
 import com.app.api.repository.PostRepository;

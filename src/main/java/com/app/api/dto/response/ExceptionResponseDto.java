@@ -1,4 +1,4 @@
-package com.app.api.dto;
+package com.app.api.dto.response;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

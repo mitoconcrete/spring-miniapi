@@ -1,4 +1,4 @@
-package com.app.api.dto;
+package com.app.api.dto.request;
 
 import com.app.api.entity.UserRoleEnum;
 import lombok.Getter;

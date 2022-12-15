@@ -1,7 +1,7 @@
 package com.app.api.service;
 
-import com.app.api.dto.CommentRequestDto;
-import com.app.api.dto.CommentResponseDto;
+import com.app.api.dto.request.CommentRequestDto;
+import com.app.api.dto.response.CommentResponseDto;
 
 import javax.servlet.http.HttpServletRequest;
 

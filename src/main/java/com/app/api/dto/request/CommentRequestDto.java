@@ -1,4 +1,4 @@
-package com.app.api.dto;
+package com.app.api.dto.request;
 
 import lombok.Getter;
 

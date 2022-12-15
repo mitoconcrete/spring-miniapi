@@ -1,6 +1,6 @@
 package com.app.api.service;
 
-import com.app.api.dto.UserRequestDto;
+import com.app.api.dto.request.UserRequestDto;
 import com.app.api.entity.User;
 import com.app.api.repository.UserRepository;
 import com.app.api.utils.JwtUtil;

@@ -1,4 +1,4 @@
-package com.app.api.dto;
+package com.app.api.dto.response;
 
 import com.app.api.entity.Post;
 import lombok.Getter;

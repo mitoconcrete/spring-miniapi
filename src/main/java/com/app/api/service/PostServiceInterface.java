@@ -1,7 +1,7 @@
 package com.app.api.service;
 
-import com.app.api.dto.PostRequestDto;
-import com.app.api.dto.PostResponseDto;
+import com.app.api.dto.request.PostRequestDto;
+import com.app.api.dto.response.PostResponseDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

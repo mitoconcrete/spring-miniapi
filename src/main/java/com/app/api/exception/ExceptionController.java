@@ -1,6 +1,6 @@
 package com.app.api.exception;
 
-import com.app.api.dto.ExceptionResponseDto;
+import com.app.api.dto.response.ExceptionResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
