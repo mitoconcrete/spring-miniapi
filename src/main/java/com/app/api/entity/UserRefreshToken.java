@@ -21,4 +21,8 @@ public class UserRefreshToken {
     public boolean isTokenValid(String token){
         return this.token.equals(token);
     }
+
+    public void updateToken(String token){
+        this.token = token;
+    }
 }
