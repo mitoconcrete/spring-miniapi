@@ -1,6 +1,8 @@
 package com.app.api.service;
 
-import com.app.api.dto.request.UserRequestDto;
+import com.app.api.dto.request.SignInRequestDto;
+import com.app.api.dto.request.SignUpRequestDto;
+import com.app.api.dto.response.JwtInfo;
 import com.app.api.entity.User;
 import com.app.api.exception.DuplicateDataException;
 import com.app.api.exception.NotFoundException;
@@ -9,8 +11,6 @@ import com.app.api.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface {
@@ -18,7 +18,7 @@ public class UserService implements UserServiceInterface {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     @Override
-    public void createUser(UserRequestDto userRequestDto) {
+    public void createUser(SignUpRequestDto userRequestDto) {
         // check same user in db.
         boolean isExist = userRepository.existsByUsername(userRequestDto.getUsername());
 
@@ -35,7 +35,7 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public void signInUser(UserRequestDto userRequestDto, HttpServletResponse response) {
+    public JwtInfo signInUser(SignInRequestDto userRequestDto) {
         // check in db
         User user = userRepository.findByUsername(userRequestDto.getUsername()).orElseThrow(
                 () -> new NotFoundException("회원을 찾을 수 없습니다.")
@@ -46,7 +46,7 @@ public class UserService implements UserServiceInterface {
             throw new NotFoundException("회원을 찾을 수 없습니다.");
         }
 
-        // token set in response header
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
+        // token get.
+        return jwtUtil.getAuthorizedTokens(user.getUsername(), user.getRole());
     }
 }

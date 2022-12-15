@@ -1,5 +1,6 @@
 package com.app.api.utils;
 
+import com.app.api.dto.response.JwtInfo;
 import com.app.api.entity.UserRoleEnum;
 import com.app.api.exception.TokenExpiredException;
 import io.jsonwebtoken.*;
@@ -22,7 +23,7 @@ public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_KEY = "auth";
-    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String BEARER_PREFIX = "Bearer";
 
     // 2hrs
     private static final int ACCESS_TOKEN_TIME = 60 * 60 * 2;
@@ -83,6 +84,12 @@ public class JwtUtil {
 
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    public JwtInfo getAuthorizedTokens(String username, UserRoleEnum role){
+        String accessToken = createAccessToken(username, role);
+        String refreshToken = createRefreshToken(username, role);
+        return new JwtInfo(BEARER_PREFIX, accessToken, refreshToken);
     }
 
 }
