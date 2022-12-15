@@ -44,7 +44,7 @@ public class ExceptionController {
             builder.append(" / ");
         }
 
-        return new ExceptionResponseDto(HttpStatus.BAD_REQUEST, builder.deleteCharAt(builder.lastIndexOf(" / ")).toString());
+        return new ExceptionResponseDto(HttpStatus.BAD_REQUEST, builder.deleteCharAt(builder.lastIndexOf("/")).toString());
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
