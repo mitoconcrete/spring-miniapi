@@ -3,6 +3,7 @@ package com.app.api.controller;
 import com.app.api.dto.PostRequestDto;
 import com.app.api.dto.PostResponseDto;
 import com.app.api.service.PostService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Api(tags = "게시물")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor

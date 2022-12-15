@@ -3,12 +3,14 @@ package com.app.api.controller;
 import com.app.api.dto.CommentRequestDto;
 import com.app.api.dto.CommentResponseDto;
 import com.app.api.service.CommentService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Api(tags = "댓글")
 @RequestMapping("/api")
 @RestController
 @RequiredArgsConstructor
