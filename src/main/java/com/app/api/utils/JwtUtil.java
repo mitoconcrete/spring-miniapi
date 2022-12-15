@@ -26,10 +26,10 @@ public class JwtUtil {
     private static final String BEARER_PREFIX = "Bearer";
 
     // 2hrs
-    private static final int ACCESS_TOKEN_TIME = 60 * 60 * 2;
+    private static final Long ACCESS_TOKEN_TIME = 1000L * 60 * 60 * 2;
 
     // 30days
-    private static final int REFRESH_TOKEN_TIME = 60 * 60 * 24 * 30;
+    private static final Long REFRESH_TOKEN_TIME = 1000L * 60 * 60 * 24 * 30;
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -58,7 +58,7 @@ public class JwtUtil {
         return createToken(username, role, REFRESH_TOKEN_TIME);
     }
 
-    private String createToken(String username, UserRoleEnum role, int expirationTime) {
+    private String createToken(String username, UserRoleEnum role, Long expirationTime) {
         Date date = new Date();
 
         return Jwts.builder()
