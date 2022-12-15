@@ -40,7 +40,7 @@ public class JwtUtil {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
-        throw new IllegalArgumentException("no token in request.");
+        throw new IllegalArgumentException("유저를 인증 할 수 없습니다.");
     }
 
     public String createToken(String username, UserRoleEnum role) {

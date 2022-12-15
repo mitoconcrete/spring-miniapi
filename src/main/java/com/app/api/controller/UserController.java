@@ -23,13 +23,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public String signUpUser(@RequestBody @Valid UserRequestDto userRequestDto){
         userService.createUser(userRequestDto);
-        return "new user create complete.";
+        return "회원가입에 성공했습니다.";
     }
 
     @ApiOperation(value = "로그인", notes = "아이디, 패스워드를 입력하여 로그인을 시도합니다.<br>로그인에 성공하면 응답헤더에 토큰이 발급됩니다.<br>다음 요청부터 ")
     @PostMapping("/signin")
     public String signInUser(@RequestBody UserRequestDto userRequestDto, HttpServletResponse response){
         userService.signInUser(userRequestDto, response);
-        return "login complete.";
+        return "로그인에 성공했습니다.";
     }
 }

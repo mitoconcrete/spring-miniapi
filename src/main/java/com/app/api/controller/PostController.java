@@ -48,6 +48,6 @@ public class PostController {
     @DeleteMapping("/posts/{id}")
     public String deletePost(@PathVariable Long id, HttpServletRequest request){
         postService.deletePost(id, request);
-        return "delete post complete.";
+        return "게시글 삭제에 성공했습니다.";
     }
 }

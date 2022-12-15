@@ -31,7 +31,7 @@ public class CommentService implements CommentServiceInterface{
 
         // get user's post.
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("not exist post.")
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
 
         // create new comment and attach to post.
@@ -50,12 +50,12 @@ public class CommentService implements CommentServiceInterface{
 
         // get post in db.
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("not exist post.")
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
 
         // get comment in db.
         Comment comment = commentRepository.findByIdAndPost_Id(commentId, post.getId()).orElseThrow(
-                () -> new IllegalArgumentException("not exist comment.")
+                () -> new IllegalArgumentException("번호에 해당되는 댓글을 찾을 수 없습니다.")
         );
 
         if(!user.isAdmin() && !comment.isAuthorIdMatchUserId(user.getId())){
@@ -78,12 +78,12 @@ public class CommentService implements CommentServiceInterface{
 
         // get post in db.
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("not exist post.")
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
 
         // get comment in db..
         Comment comment = commentRepository.findByIdAndPost_Id(commentId, post.getId()).orElseThrow(
-                () -> new IllegalArgumentException("not exist comment.")
+                () -> new IllegalArgumentException("번호에 해당되는 댓글을 찾을 수 없습니다.")
         );
 
         if(!user.isAdmin() && !comment.isAuthorIdMatchUserId(user.getId())){
@@ -104,7 +104,7 @@ public class CommentService implements CommentServiceInterface{
         }
 
         return userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new IllegalArgumentException("not exist user.")
+                () -> new IllegalArgumentException("유저가 존재하지 않습니다.")
         );
     }
 }

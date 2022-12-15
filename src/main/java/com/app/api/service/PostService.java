@@ -47,7 +47,7 @@ public class PostService implements PostServiceInterface{
     @Transactional(readOnly = true)
     public PostResponseDto getPost(Long id) {
         return new PostResponseDto(postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("post not exist.")
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         ));
     }
 
@@ -59,7 +59,7 @@ public class PostService implements PostServiceInterface{
 
         // find post what authorized user write with match id.
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("post not exist."));
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
         if(!user.isAdmin() && !post.isAuthorIdMatchUserId(user.getId())){
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
@@ -81,7 +81,7 @@ public class PostService implements PostServiceInterface{
 
         // find post what authorized user write with match id.
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("post not exist."));
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
         if(!user.isAdmin() && !post.isAuthorIdMatchUserId(user.getId())){
             throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
@@ -102,7 +102,7 @@ public class PostService implements PostServiceInterface{
         }
 
         return userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new IllegalArgumentException("not exist user.")
+                () -> new IllegalArgumentException("유저가 존재하지 않습니다.")
         );
     }
 }

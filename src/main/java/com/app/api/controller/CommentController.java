@@ -36,6 +36,6 @@ public class CommentController {
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     public String deleteComment(@PathVariable Long postId,@PathVariable Long commentId ,HttpServletRequest request) {
         commentService.deleteComment(postId, commentId, request);
-        return "comment remove complete.";
+        return "댓글 삭제에 성공했습니다.";
     }
 }
