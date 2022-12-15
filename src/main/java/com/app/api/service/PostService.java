@@ -4,8 +4,10 @@ import com.app.api.dto.request.PostRequestDto;
 import com.app.api.dto.response.PostResponseDto;
 import com.app.api.entity.Post;
 import com.app.api.entity.User;
+import com.app.api.entity.UserRefreshToken;
 import com.app.api.exception.NotAuthorizedException;
 import com.app.api.exception.NotFoundException;
+import com.app.api.repository.AuthorizationRepository;
 import com.app.api.repository.PostRepository;
 import com.app.api.repository.UserRepository;
 import com.app.api.utils.JwtUtil;
@@ -24,6 +26,7 @@ public class PostService implements PostServiceInterface{
     private final PostRepository postRepository;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final AuthorizationRepository authorizationRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -103,8 +106,18 @@ public class PostService implements PostServiceInterface{
             throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
 
-        return userRepository.findByUsername(claims.getSubject()).orElseThrow(
+        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                 () -> new NotFoundException("유저가 존재하지 않습니다.")
         );
+
+        UserRefreshToken userRefreshToken = authorizationRepository.findByUser_Id(user.getId()).orElseThrow(
+                () -> new NotAuthorizedException("잘못된 접근입니다. 재 로그인 하세요.")
+        );
+
+        if(userRefreshToken.isTokenValid(token)){
+            throw new NotAuthorizedException("해당 토큰은 인증용 토큰이 아닙니다.");
+        }
+
+        return user;
     }
 }

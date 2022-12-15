@@ -5,8 +5,10 @@ import com.app.api.dto.response.CommentResponseDto;
 import com.app.api.entity.Comment;
 import com.app.api.entity.Post;
 import com.app.api.entity.User;
+import com.app.api.entity.UserRefreshToken;
 import com.app.api.exception.NotAuthorizedException;
 import com.app.api.exception.NotFoundException;
+import com.app.api.repository.AuthorizationRepository;
 import com.app.api.repository.CommentRepository;
 import com.app.api.repository.PostRepository;
 import com.app.api.repository.UserRepository;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class CommentService implements CommentServiceInterface{
     private final CommentRepository commentRepository;
+    private final AuthorizationRepository authorizationRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
@@ -105,8 +108,18 @@ public class CommentService implements CommentServiceInterface{
             throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
 
-        return userRepository.findByUsername(claims.getSubject()).orElseThrow(
+        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                 () -> new NotFoundException("유저가 존재하지 않습니다.")
         );
+
+        UserRefreshToken userRefreshToken = authorizationRepository.findByUser_Id(user.getId()).orElseThrow(
+                () -> new NotAuthorizedException("잘못된 접근입니다. 재 로그인 하세요.")
+        );
+
+        if(userRefreshToken.isTokenValid(token)){
+            throw new NotAuthorizedException("해당 토큰은 인증용 토큰이 아닙니다.");
+        }
+
+        return user;
     }
 }
