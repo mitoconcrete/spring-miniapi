@@ -22,7 +22,12 @@ public class JwtUtil {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long TOKEN_TIME = 60 * 60 * 1000L;
+
+    // 2hrs
+    private static final int ACCESS_TOKEN_TIME = 60 * 60 * 2;
+
+    // 30days
+    private static final int REFRESH_TOKEN_TIME = 60 * 60 * 24 * 30;
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -43,17 +48,23 @@ public class JwtUtil {
         throw new IllegalArgumentException("유저를 인증 할 수 없습니다.");
     }
 
-    public String createToken(String username, UserRoleEnum role) {
+    public String createAccessToken(String username, UserRoleEnum role){
+        return createToken(username, role, ACCESS_TOKEN_TIME);
+    }
+
+    public String createRefreshToken(String username, UserRoleEnum role){
+        return createToken(username, role, REFRESH_TOKEN_TIME);
+    }
+
+    private String createToken(String username, UserRoleEnum role, int expirationTime) {
         Date date = new Date();
 
-        return BEARER_PREFIX +
-                Jwts.builder()
-                        .setSubject(username)
-                        .claim(AUTHORIZATION_KEY, role)
-                        .setExpiration(new Date(date.getTime() + TOKEN_TIME))
-                        .setIssuedAt(date)
-                        .signWith(key, signatureAlgorithm)
-                        .compact();
+        return Jwts.builder()
+                .setSubject(username)
+                .claim(AUTHORIZATION_KEY, role)
+                .setExpiration(new Date(date.getTime() + expirationTime))
+                .signWith(key, signatureAlgorithm)
+                .compact();
     }
 
 
