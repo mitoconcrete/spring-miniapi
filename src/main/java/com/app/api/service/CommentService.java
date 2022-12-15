@@ -5,6 +5,8 @@ import com.app.api.dto.response.CommentResponseDto;
 import com.app.api.entity.Comment;
 import com.app.api.entity.Post;
 import com.app.api.entity.User;
+import com.app.api.exception.NotAuthorizedException;
+import com.app.api.exception.NotFoundException;
 import com.app.api.repository.CommentRepository;
 import com.app.api.repository.PostRepository;
 import com.app.api.repository.UserRepository;
@@ -31,7 +33,7 @@ public class CommentService implements CommentServiceInterface{
 
         // get user's post.
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () -> new NotFoundException("게시글이 존재하지 않습니다.")
         );
 
         // create new comment and attach to post.
@@ -50,16 +52,16 @@ public class CommentService implements CommentServiceInterface{
 
         // get post in db.
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () -> new NotFoundException("게시글이 존재하지 않습니다.")
         );
 
         // get comment in db.
         Comment comment = commentRepository.findByIdAndPost_Id(commentId, post.getId()).orElseThrow(
-                () -> new IllegalArgumentException("번호에 해당되는 댓글을 찾을 수 없습니다.")
+                () -> new NotFoundException("번호에 해당되는 댓글을 찾을 수 없습니다.")
         );
 
         if(!user.isAdmin() && !comment.isAuthorIdMatchUserId(user.getId())){
-            throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
+            throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
 
         // update comment's contents.
@@ -78,16 +80,16 @@ public class CommentService implements CommentServiceInterface{
 
         // get post in db.
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () -> new NotFoundException("게시글이 존재하지 않습니다.")
         );
 
         // get comment in db..
         Comment comment = commentRepository.findByIdAndPost_Id(commentId, post.getId()).orElseThrow(
-                () -> new IllegalArgumentException("번호에 해당되는 댓글을 찾을 수 없습니다.")
+                () -> new NotFoundException("번호에 해당되는 댓글을 찾을 수 없습니다.")
         );
 
         if(!user.isAdmin() && !comment.isAuthorIdMatchUserId(user.getId())){
-            throw new IllegalArgumentException("작성자만 삭제/수정할 수 있습니다.");
+            throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
 
         // delete comment.
@@ -104,7 +106,7 @@ public class CommentService implements CommentServiceInterface{
         }
 
         return userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new IllegalArgumentException("유저가 존재하지 않습니다.")
+                () -> new NotFoundException("유저가 존재하지 않습니다.")
         );
     }
 }
