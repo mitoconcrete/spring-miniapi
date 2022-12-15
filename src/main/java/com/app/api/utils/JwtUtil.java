@@ -1,6 +1,7 @@
 package com.app.api.utils;
 
 import com.app.api.entity.UserRoleEnum;
+import com.app.api.exception.TokenExpiredException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -72,9 +73,11 @@ public class JwtUtil {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException | SignatureException | ExpiredJwtException |
+        } catch (SecurityException | MalformedJwtException | SignatureException |
                  UnsupportedJwtException | IllegalArgumentException e) {
             throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
+        }catch (ExpiredJwtException e){
+            throw new TokenExpiredException("토큰 기한이 지났습니다.");
         }
     }
 

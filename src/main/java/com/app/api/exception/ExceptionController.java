@@ -63,4 +63,9 @@ public class ExceptionController {
     public ExceptionResponseDto DuplicateDataException(Exception e){
         return new ExceptionResponseDto(HttpStatus.BAD_REQUEST, e.getMessage());
     }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ExceptionResponseDto TokenExpiredException(Exception e){
+        return new ExceptionResponseDto(HttpStatus.FORBIDDEN, e.getMessage());
+    }
 }
