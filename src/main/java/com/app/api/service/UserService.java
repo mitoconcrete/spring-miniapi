@@ -12,6 +12,7 @@ import com.app.api.repository.UserRepository;
 import com.app.api.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class UserService implements UserServiceInterface {
     private final AuthorizationRepository authorizationRepository;
     private final JwtUtil jwtUtil;
     @Override
+    @Transactional
     public void createUser(SignUpRequestDto userRequestDto) {
         // check same user in db.
         boolean isExist = userRepository.existsByUsername(userRequestDto.getUsername());
@@ -41,6 +43,7 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
+    @Transactional
     public JwtInfo signInUser(SignInRequestDto userRequestDto) {
         // check in db
         User user = userRepository.findByUsername(userRequestDto.getUsername()).orElseThrow(
