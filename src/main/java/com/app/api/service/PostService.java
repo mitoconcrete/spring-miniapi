@@ -97,6 +97,7 @@ public class PostService implements PostServiceInterface{
     }
 
     // check user authorization and get user instance.
+    @Transactional(readOnly = true)
     private User getValidUserFromRequestHeader(HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         Claims claims;

@@ -99,6 +99,7 @@ public class CommentService implements CommentServiceInterface{
         commentRepository.delete(comment);
     }
 
+    @Transactional(readOnly = true)
     private User getValidUserFromRequestHeader(HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         Claims claims;

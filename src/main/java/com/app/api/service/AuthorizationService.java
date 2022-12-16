@@ -11,6 +11,7 @@ import com.app.api.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +22,7 @@ public class AuthorizationService implements AuthorizationServiceInterface{
     private final AuthorizationRepository authorizationRepository;
     private final JwtUtil jwtUtil;
 
+    @Transactional
     public JwtInfo getRenewTokens(HttpServletRequest request){
         // prev refresh token validation.
         String token = jwtUtil.resolveToken(request);
