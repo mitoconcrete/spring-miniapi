@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class AuthorizedUser {
+public class AuthorizedUserInfo {
     private final String username;
     private final UserRoleEnum role;
     private final TokenType tokenType;

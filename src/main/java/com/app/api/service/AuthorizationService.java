@@ -1,60 +1,41 @@
 package com.app.api.service;
 
 import com.app.api.dto.response.JwtInfo;
-import com.app.api.entity.User;
-import com.app.api.entity.UserRefreshToken;
+import com.app.api.dto.service.AuthorizedUserInfo;
+import com.app.api.entity.UserRoleEnum;
 import com.app.api.exception.NotAuthorizedException;
-import com.app.api.exception.NotFoundException;
-import com.app.api.repository.AuthorizationRepository;
-import com.app.api.repository.UserRepository;
 import com.app.api.utils.JwtUtil;
+import com.app.api.utils.TokenType;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Service
 @RequiredArgsConstructor
 public class AuthorizationService implements AuthorizationServiceInterface{
-    private final UserRepository userRepository;
-    private final AuthorizationRepository authorizationRepository;
     private final JwtUtil jwtUtil;
 
-    @Transactional
-    public JwtInfo getRenewTokens(HttpServletRequest request){
-        // prev refresh token validation.
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
+    public AuthorizedUserInfo getAuthorizedUserInfo(String token){
         if(jwtUtil.validateToken(token)){
-            claims = jwtUtil.getUserInfoFromToken(token);
+            Claims claims = jwtUtil.getUserInfoFromToken(token);
+            UserRoleEnum role = UserRoleEnum.valueOf(claims.get(JwtUtil.AUTHORIZATION_KEY).toString());
+            TokenType tokenType = TokenType.valueOf(claims.get(JwtUtil.AUTHORIZATION_KEY).toString());
+            return new AuthorizedUserInfo(claims.getSubject(), role, tokenType);
         }else{
             throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
         }
+    }
 
-        // get user
-        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new NotFoundException("유저가 존재하지 않습니다.")
-        );
-
-        // get prev refresh token
-        UserRefreshToken userToken = authorizationRepository.findByUser_Id(user.getId()).orElseThrow(
-                () -> new NotFoundException("유저에 해당되는 토큰 정보가 존재하지 않습니다.")
-        );
-
-        // if not same, delete refresh token info.
-        boolean isValidToken = userToken.isTokenValid(token);
-        if(!isValidToken){
-            authorizationRepository.delete(userToken);
-            throw new NotAuthorizedException("이상한 움직임이 감지되었습니다. 재 로그인해주세요.");
+    public JwtInfo getRenewTokens(HttpServletRequest request){
+        // prev refresh token validation.
+        String token = jwtUtil.resolveToken(request);
+        AuthorizedUserInfo userInfo = getAuthorizedUserInfo(token);
+        if(userInfo.getRole().equals(UserRoleEnum.USER) || userInfo.getTokenType().equals(TokenType.ACCESS)){
+            throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
         }
 
-        // if same, renew refresh token and update to db.
-        JwtInfo jwtInfo = jwtUtil.getAuthorizedTokens(user.getUsername(), user.getRole());
-
-        // update refresh token;
-        userToken.updateToken(jwtInfo.getRefreshToken());
-        return jwtInfo;
+        return jwtUtil.getAuthorizedTokens(userInfo.getUsername(), userInfo.getRole());
     }
 }
