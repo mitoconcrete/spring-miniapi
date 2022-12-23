@@ -2,10 +2,9 @@ package com.app.api.controller;
 
 import com.app.api.dto.request.PostRequestDto;
 import com.app.api.dto.response.PostResponseDto;
-import com.app.api.dto.service.AuthorizedUserInfo;
-import com.app.api.dto.service.CreatePostDto;
-import com.app.api.dto.service.DeletePostDto;
-import com.app.api.dto.service.UpdatePostDto;
+import com.app.api.dto.service.*;
+import com.app.api.entity.UserRoleEnum;
+import com.app.api.exception.NotAuthorizedException;
 import com.app.api.service.AuthorizationService;
 import com.app.api.service.PostService;
 import com.app.api.service.UserService;
@@ -70,4 +69,27 @@ public class PostController {
         postService.deletePost(deletePostDto);
         return "게시글 삭제에 성공했습니다.";
     }
+
+    @PutMapping("/admin/posts/{id}")
+    public PostResponseDto adminUpdatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
+        String token = jwtUtil.resolveToken(request);
+        AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
+        if(userInfo.getRole().equals(UserRoleEnum.USER)){
+            throw new NotAuthorizedException("업데이트 권한이 없습니다.");
+        }
+        AdminUpdatePostDto adminUpdatePostDto = new AdminUpdatePostDto(id, postRequestDto.getContents());
+        return postService.adminUpdatePost(adminUpdatePostDto);
+    }
+
+    @DeleteMapping("/admin/posts/{id}")
+    public String adminDelete(@PathVariable Long id, HttpServletRequest request){
+        String token = jwtUtil.resolveToken(request);
+        AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
+        if(userInfo.getRole().equals(UserRoleEnum.USER)){
+            throw new NotAuthorizedException("업데이트 권한이 없습니다.");
+        }
+        postService.adminDeletePost(id);
+        return "게시글 삭제에 성공했습니다.";
+    }
+
 }

@@ -2,10 +2,7 @@ package com.app.api.service;
 
 import com.app.api.dto.request.PostRequestDto;
 import com.app.api.dto.response.PostResponseDto;
-import com.app.api.dto.service.AuthorizedUserInfo;
-import com.app.api.dto.service.CreatePostDto;
-import com.app.api.dto.service.DeletePostDto;
-import com.app.api.dto.service.UpdatePostDto;
+import com.app.api.dto.service.*;
 import com.app.api.entity.Post;
 import com.app.api.entity.User;
 import com.app.api.entity.UserRefreshToken;
@@ -68,15 +65,12 @@ public class PostService implements PostServiceInterface{
     public PostResponseDto updatePost(UpdatePostDto updatePostDto) {
         // find post what authorized user write with match id.
         Post post = _getPost(updatePostDto.getId());
-
         if(!post.isWriterMatch(updatePostDto.getWriter())){
             throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
-
         // update contents.
         post.updateContents(updatePostDto.getContents());
         postRepository.save(post);
-
         // response update post.
         return new PostResponseDto(post);
     }
@@ -85,11 +79,27 @@ public class PostService implements PostServiceInterface{
     @Transactional
     public void deletePost(DeletePostDto deletePostDto) {
         Post post = _getPost(deletePostDto.getId());
-
         if(!post.isWriterMatch(deletePostDto.getWriter())){
             throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
+        // remove post.
+        postRepository.delete(post);
+    }
 
+    @Override
+    public PostResponseDto adminUpdatePost(AdminUpdatePostDto adminUpdatePostDto) {
+        // find post what authorized user write with match id.
+        Post post = _getPost(adminUpdatePostDto.getId());
+        // update contents.
+        post.updateContents(adminUpdatePostDto.getContents());
+        postRepository.save(post);
+        // response update post.
+        return new PostResponseDto(post);
+    }
+
+    @Override
+    public void adminDeletePost(Long id) {
+        Post post = _getPost(id);
         // remove post.
         postRepository.delete(post);
     }

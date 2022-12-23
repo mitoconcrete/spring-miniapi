@@ -2,6 +2,7 @@ package com.app.api.service;
 
 import com.app.api.dto.request.PostRequestDto;
 import com.app.api.dto.response.PostResponseDto;
+import com.app.api.dto.service.AdminUpdatePostDto;
 import com.app.api.dto.service.CreatePostDto;
 import com.app.api.dto.service.DeletePostDto;
 import com.app.api.dto.service.UpdatePostDto;
@@ -15,4 +16,6 @@ public interface PostServiceInterface {
     PostResponseDto createPost(CreatePostDto createPostDto);
     PostResponseDto updatePost(UpdatePostDto updatePostDto);
     void deletePost(DeletePostDto deletePostDto);
+    PostResponseDto adminUpdatePost(AdminUpdatePostDto adminUpdatePostDto);
+    void  adminDeletePost(Long id);
 }
