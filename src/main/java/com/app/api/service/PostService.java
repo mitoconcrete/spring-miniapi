@@ -29,13 +29,6 @@ public class PostService implements PostServiceInterface{
         ));
     }
 
-    @Transactional(readOnly = true)
-    public Post _getPost(Long id) {
-        return postRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("게시글이 존재하지 않습니다.")
-        );
-    }
-
     @Override
     @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
@@ -59,7 +52,7 @@ public class PostService implements PostServiceInterface{
     @Transactional
     public PostResponseDto updatePost(UpdatePostDto updatePostDto) {
         // find post what authorized user write with match id.
-        Post post = _getPost(updatePostDto.getId());
+        Post post = getPost(updatePostDto.getId()).toEntity();
         if(!post.isWriterMatch(updatePostDto.getWriter())){
             throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
@@ -73,7 +66,7 @@ public class PostService implements PostServiceInterface{
     @Override
     @Transactional
     public void deletePost(DeletePostDto deletePostDto) {
-        Post post = _getPost(deletePostDto.getId());
+        Post post =  getPost(deletePostDto.getId()).toEntity();
         if(!post.isWriterMatch(deletePostDto.getWriter())){
             throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
@@ -84,7 +77,7 @@ public class PostService implements PostServiceInterface{
     @Override
     public PostResponseDto adminUpdatePost(AdminUpdatePostDto adminUpdatePostDto) {
         // find post what authorized user write with match id.
-        Post post = _getPost(adminUpdatePostDto.getId());
+        Post post = getPost(adminUpdatePostDto.getId()).toEntity();
         // update contents.
         post.updateContents(adminUpdatePostDto.getContents());
         postRepository.save(post);
@@ -94,7 +87,7 @@ public class PostService implements PostServiceInterface{
 
     @Override
     public void adminDeletePost(Long id) {
-        Post post = _getPost(id);
+        Post post = getPost(id).toEntity();
         // remove post.
         postRepository.delete(post);
     }

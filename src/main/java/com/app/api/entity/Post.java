@@ -1,5 +1,6 @@
 package com.app.api.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Post extends Timestamped{
     @Id
