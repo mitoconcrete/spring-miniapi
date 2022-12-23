@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DeletePostDto {
     private final Long id;
-    private final AuthorizedUserInfo userInfo;
+    private final String writer;
 }

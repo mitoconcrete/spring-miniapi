@@ -8,5 +8,5 @@ import lombok.RequiredArgsConstructor;
 public class CreatePostDto {
     private final String title;
     private final String contents;
-    private final AuthorizedUserInfo authorizedUserInfo;
+    private final String writer;
 }

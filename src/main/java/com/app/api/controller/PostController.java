@@ -8,6 +8,7 @@ import com.app.api.dto.service.DeletePostDto;
 import com.app.api.dto.service.UpdatePostDto;
 import com.app.api.service.AuthorizationService;
 import com.app.api.service.PostService;
+import com.app.api.service.UserService;
 import com.app.api.utils.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +24,8 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class PostController {
+
+    private final UserService userService;
     private final AuthorizationService authorizationService;
     private final PostService postService;
     private final JwtUtil jwtUtil;
@@ -39,7 +42,7 @@ public class PostController {
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
-        CreatePostDto createPostDto = new CreatePostDto(postRequestDto.getTitle(), postRequestDto.getContents(), userInfo);
+        CreatePostDto createPostDto = new CreatePostDto(postRequestDto.getTitle(), postRequestDto.getContents(), userInfo.getUsername());
         return postService.createPost(createPostDto);
     }
 
@@ -54,7 +57,7 @@ public class PostController {
     public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
-        UpdatePostDto updatePostDto = new UpdatePostDto(id, postRequestDto.getContents(), userInfo);
+        UpdatePostDto updatePostDto = new UpdatePostDto(id, postRequestDto.getContents(), userInfo.getUsername());
         return postService.updatePost(updatePostDto);
     }
 
@@ -63,7 +66,7 @@ public class PostController {
     public String deletePost(@PathVariable Long id, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
         AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
-        DeletePostDto deletePostDto = new DeletePostDto(id, userInfo);
+        DeletePostDto deletePostDto = new DeletePostDto(id, userInfo.getUsername());
         postService.deletePost(deletePostDto);
         return "게시글 삭제에 성공했습니다.";
     }

@@ -28,9 +28,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService implements PostServiceInterface{
     private final PostRepository postRepository;
-    private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
-
 
     @Override
     @Transactional(readOnly = true)
@@ -58,8 +55,7 @@ public class PostService implements PostServiceInterface{
     @Transactional
     public PostResponseDto createPost(CreatePostDto createPostDto) {
         // create new post.
-        Post post = new Post(createPostDto.getTitle(), createPostDto.getContents(), createPostDto.getAuthorizedUserInfo().toEntity());
-
+        Post post = new Post(createPostDto.getTitle(), createPostDto.getContents(), createPostDto.getWriter());
         // request new post to client.
         postRepository.save(post);
         return new PostResponseDto(post);
@@ -70,12 +66,10 @@ public class PostService implements PostServiceInterface{
     @Override
     @Transactional
     public PostResponseDto updatePost(UpdatePostDto updatePostDto) {
-        // get authorized user.
-
         // find post what authorized user write with match id.
         Post post = _getPost(updatePostDto.getId());
 
-        if(!post.isWriterMatch(updatePostDto.getUserInfo().getUsername())){
+        if(!post.isWriterMatch(updatePostDto.getWriter())){
             throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
 
@@ -92,7 +86,7 @@ public class PostService implements PostServiceInterface{
     public void deletePost(DeletePostDto deletePostDto) {
         Post post = _getPost(deletePostDto.getId());
 
-        if(!post.isWriterMatch(deletePostDto.getUserInfo().getUsername())){
+        if(!post.isWriterMatch(deletePostDto.getWriter())){
             throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
 
