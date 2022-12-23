@@ -1,24 +1,16 @@
 package com.app.api.service;
 
-import com.app.api.dto.request.CommentRequestDto;
 import com.app.api.dto.response.CommentResponseDto;
 import com.app.api.dto.service.*;
 import com.app.api.entity.Comment;
 import com.app.api.entity.Post;
-import com.app.api.entity.User;
-import com.app.api.entity.UserRefreshToken;
+
 import com.app.api.exception.NotAuthorizedException;
 import com.app.api.exception.NotFoundException;
 import com.app.api.repository.CommentRepository;
-import com.app.api.repository.PostRepository;
-import com.app.api.repository.UserRepository;
-import com.app.api.utils.JwtUtil;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Service
 @RequiredArgsConstructor
