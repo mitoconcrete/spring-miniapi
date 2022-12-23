@@ -2,9 +2,7 @@ package com.app.api.service;
 
 import com.app.api.dto.request.CommentRequestDto;
 import com.app.api.dto.response.CommentResponseDto;
-import com.app.api.dto.service.CreateCommentDto;
-import com.app.api.dto.service.DeleteCommentDto;
-import com.app.api.dto.service.UpdateCommentDto;
+import com.app.api.dto.service.*;
 import com.app.api.entity.Comment;
 import com.app.api.entity.Post;
 import com.app.api.entity.User;
@@ -65,6 +63,31 @@ public class CommentService implements CommentServiceInterface{
         if(!comment.isWriterMatch(deleteCommentDto.getWriter())){
             throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
+        // delete comment.
+        commentRepository.delete(comment);
+    }
+
+    @Override
+    @Transactional
+    public CommentResponseDto adminUpdateComment(AdminUpdateCommentDto updateCommentDto) {
+        // get comment in db.
+        Comment comment = commentRepository.findByIdAndPost_Id(updateCommentDto.getCommentId(), updateCommentDto.getPostId()).orElseThrow(
+                () -> new NotFoundException("번호에 해당되는 댓글을 찾을 수 없습니다.")
+        );
+        // update comment's contents.
+        comment.updateContents(updateCommentDto.getContents());
+        // save
+        commentRepository.save(comment);
+        return new CommentResponseDto(comment);
+    }
+
+    @Override
+    @Transactional
+    public void adminDeleteComment(AdminDeleteCommentDto deleteCommentDto) {
+        // get comment in db..
+        Comment comment = commentRepository.findByIdAndPost_Id(deleteCommentDto.getCommentId(), deleteCommentDto.getPostId()).orElseThrow(
+                () -> new NotFoundException("번호에 해당되는 댓글을 찾을 수 없습니다.")
+        );
         // delete comment.
         commentRepository.delete(comment);
     }

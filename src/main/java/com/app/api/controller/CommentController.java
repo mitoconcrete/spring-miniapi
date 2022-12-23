@@ -3,10 +3,7 @@ package com.app.api.controller;
 import com.app.api.dto.request.CommentRequestDto;
 import com.app.api.dto.response.CommentResponseDto;
 import com.app.api.dto.response.PostResponseDto;
-import com.app.api.dto.service.AuthorizedUserInfo;
-import com.app.api.dto.service.CreateCommentDto;
-import com.app.api.dto.service.DeleteCommentDto;
-import com.app.api.dto.service.UpdateCommentDto;
+import com.app.api.dto.service.*;
 import com.app.api.exception.NotAuthorizedException;
 import com.app.api.service.AuthorizationService;
 import com.app.api.service.CommentService;
@@ -79,4 +76,34 @@ public class CommentController {
         commentService.deleteComment(deleteCommentDto);
         return "댓글 삭제에 성공했습니다.";
     }
+
+    @PutMapping("/admin/posts/{postId}/comments/{commentId}")
+    public CommentResponseDto adminUpdateComment(@PathVariable Long postId, @PathVariable Long commentId,@RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        if(token == null){
+            throw new NotAuthorizedException("토큰이 존재하지 않습니다.");
+        }
+        AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
+        if(userInfo.getTokenType().equals(TokenType.REFRESH)){
+            throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
+        }
+        AdminUpdateCommentDto updateCommentDto = new AdminUpdateCommentDto(postId, commentId, commentRequestDto.getContents());
+        return commentService.adminUpdateComment(updateCommentDto);
+    }
+
+    @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    public String adminDeleteComment(@PathVariable Long postId,@PathVariable Long commentId ,HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        if(token == null){
+            throw new NotAuthorizedException("토큰이 존재하지 않습니다.");
+        }
+        AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
+        if(userInfo.getTokenType().equals(TokenType.REFRESH)){
+            throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
+        }
+        AdminDeleteCommentDto deleteCommentDto = new AdminDeleteCommentDto(postId, commentId);
+        commentService.adminDeleteComment(deleteCommentDto);
+        return "댓글 삭제에 성공했습니다.";
+    }
+
 }
