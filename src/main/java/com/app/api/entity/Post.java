@@ -21,23 +21,21 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private String contents;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String writer;
 
     @OneToMany(mappedBy = "post")
     @OrderBy("modifiedAt desc")
     private final List<Comment> comments = new ArrayList<>();
 
-    public Post(String title, String contents, User user) {
+    public Post(String title, String contents, String username) {
         this.title = title;
         this.contents = contents;
-        this.user = user;
+        this.writer = username;
     }
 
     public void updateContents(String contents) {this.contents = contents;}
 
     public boolean isWriterMatch(String username){
-        return this.user.getUsername().equals(username);
+        return this.writer.equals(username);
     }
 }

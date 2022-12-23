@@ -27,9 +27,6 @@ public class User extends Timestamped{
     private UserRoleEnum role;
 
     @OneToMany(mappedBy = "user")
-    private final List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
     private final List<Comment> comments = new ArrayList<>();
 
     public User(String username, String password, UserRoleEnum role) {
@@ -37,6 +34,12 @@ public class User extends Timestamped{
         this.password = password;
         this.role = role;
     }
+
+    public User(Long id, String username){
+        this.id = id;
+        this.username = username;
+    }
+
 
     public boolean isPasswordValid(String password) {
         return this.password.equals(password);
