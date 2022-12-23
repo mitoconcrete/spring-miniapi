@@ -37,7 +37,7 @@ public class Post extends Timestamped{
 
     public void updateContents(String contents) {this.contents = contents;}
 
-    public boolean isAuthorIdMatchUserId(Long userId){
-        return this.user.getId().equals(userId);
+    public boolean isWriterMatch(String username){
+        return this.user.getUsername().equals(username);
     }
 }
