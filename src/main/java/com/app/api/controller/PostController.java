@@ -7,7 +7,6 @@ import com.app.api.entity.UserRoleEnum;
 import com.app.api.exception.NotAuthorizedException;
 import com.app.api.service.AuthorizationService;
 import com.app.api.service.PostService;
-import com.app.api.service.UserService;
 import com.app.api.utils.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final UserService userService;
     private final AuthorizationService authorizationService;
     private final PostService postService;
     private final JwtUtil jwtUtil;
