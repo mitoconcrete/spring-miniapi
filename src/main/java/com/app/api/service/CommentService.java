@@ -2,13 +2,15 @@ package com.app.api.service;
 
 import com.app.api.dto.request.CommentRequestDto;
 import com.app.api.dto.response.CommentResponseDto;
+import com.app.api.dto.service.CreateCommentDto;
+import com.app.api.dto.service.DeleteCommentDto;
+import com.app.api.dto.service.UpdateCommentDto;
 import com.app.api.entity.Comment;
 import com.app.api.entity.Post;
 import com.app.api.entity.User;
 import com.app.api.entity.UserRefreshToken;
 import com.app.api.exception.NotAuthorizedException;
 import com.app.api.exception.NotFoundException;
-import com.app.api.repository.AuthorizationRepository;
 import com.app.api.repository.CommentRepository;
 import com.app.api.repository.PostRepository;
 import com.app.api.repository.UserRepository;
@@ -24,24 +26,13 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class CommentService implements CommentServiceInterface{
     private final CommentRepository commentRepository;
-    private final AuthorizationRepository authorizationRepository;
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+
     @Override
     @Transactional
-    public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
-        // get authorized user.
-        User user = getValidUserFromRequestHeader(request);
-
-        // get user's post.
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NotFoundException("게시글이 존재하지 않습니다.")
-        );
-
+    public CommentResponseDto createComment(CreateCommentDto createCommentDto) {
+        Post post = createCommentDto.getPostDto().toEntity();
         // create new comment and attach to post.
-        Comment comment = new Comment(post, user, commentRequestDto.getContents());
-
+        Comment comment = new Comment(post, createCommentDto.getWriter(), createCommentDto.getContents());
         // save comment.
         commentRepository.save(comment);
         return new CommentResponseDto(comment);
@@ -49,27 +40,16 @@ public class CommentService implements CommentServiceInterface{
 
     @Override
     @Transactional
-    public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
-        // get authorized user.
-        User user = getValidUserFromRequestHeader(request);
-
-        // get post in db.
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NotFoundException("게시글이 존재하지 않습니다.")
-        );
-
+    public CommentResponseDto updateComment(UpdateCommentDto updateCommentDto) {
         // get comment in db.
-        Comment comment = commentRepository.findByIdAndPost_Id(commentId, post.getId()).orElseThrow(
+        Comment comment = commentRepository.findByIdAndPost_Id(updateCommentDto.getCommentId(), updateCommentDto.getPostId()).orElseThrow(
                 () -> new NotFoundException("번호에 해당되는 댓글을 찾을 수 없습니다.")
         );
-
-        if(!user.isAdmin() && !comment.isAuthorIdMatchUserId(user.getId())){
+        if(!comment.isWriterMatch(updateCommentDto.getWriter())){
             throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
-
         // update comment's contents.
-        comment.updateContents(commentRequestDto.getContents());
-
+        comment.updateContents(updateCommentDto.getContents());
         // save
         commentRepository.save(comment);
         return new CommentResponseDto(comment);
@@ -77,50 +57,15 @@ public class CommentService implements CommentServiceInterface{
 
     @Override
     @Transactional
-    public void deleteComment(Long postId, Long commentId, HttpServletRequest request) {
-        // get authorized user.
-        User user = getValidUserFromRequestHeader(request);
-
-        // get post in db.
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NotFoundException("게시글이 존재하지 않습니다.")
-        );
-
+    public void deleteComment(DeleteCommentDto deleteCommentDto) {
         // get comment in db..
-        Comment comment = commentRepository.findByIdAndPost_Id(commentId, post.getId()).orElseThrow(
+        Comment comment = commentRepository.findByIdAndPost_Id(deleteCommentDto.getCommentId(), deleteCommentDto.getPostId()).orElseThrow(
                 () -> new NotFoundException("번호에 해당되는 댓글을 찾을 수 없습니다.")
         );
-
-        if(!user.isAdmin() && !comment.isAuthorIdMatchUserId(user.getId())){
+        if(!comment.isWriterMatch(deleteCommentDto.getWriter())){
             throw new NotAuthorizedException("작성자만 삭제/수정할 수 있습니다.");
         }
-
         // delete comment.
         commentRepository.delete(comment);
-    }
-
-    @Transactional(readOnly = true)
-    private User getValidUserFromRequestHeader(HttpServletRequest request){
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-        if(jwtUtil.validateToken(token)){
-            claims = jwtUtil.getUserInfoFromToken(token);
-        }else{
-            throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
-        }
-
-        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new NotFoundException("유저가 존재하지 않습니다.")
-        );
-
-        UserRefreshToken userRefreshToken = authorizationRepository.findByUser_Id(user.getId()).orElseThrow(
-                () -> new NotAuthorizedException("잘못된 접근입니다. 재 로그인 하세요.")
-        );
-
-        if(userRefreshToken.isTokenValid(token)){
-            throw new NotAuthorizedException("해당 토큰은 인증용 토큰이 아닙니다.");
-        }
-
-        return user;
     }
 }
