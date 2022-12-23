@@ -28,9 +28,8 @@ public class AuthorizationService implements AuthorizationServiceInterface{
         }
     }
 
-    public JwtInfo getRenewTokens(HttpServletRequest request){
+    public JwtInfo getRenewTokens(String token){
         // prev refresh token validation.
-        String token = jwtUtil.resolveToken(request);
         AuthorizedUserInfo userInfo = getAuthorizedUserInfo(token);
         if(userInfo.getRole().equals(UserRoleEnum.USER) || userInfo.getTokenType().equals(TokenType.ACCESS)){
             throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
