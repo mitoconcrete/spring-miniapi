@@ -8,6 +8,7 @@ import com.app.api.exception.NotAuthorizedException;
 import com.app.api.service.AuthorizationService;
 import com.app.api.service.PostService;
 import com.app.api.utils.JwtUtil;
+import com.app.api.utils.TokenType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,13 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
+        if(token == null){
+            throw new NotAuthorizedException("토큰이 존재하지 않습니다.");
+        }
         AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
+        if(userInfo.getTokenType().equals(TokenType.REFRESH)){
+            throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
+        }
         CreatePostDto createPostDto = new CreatePostDto(postRequestDto.getTitle(), postRequestDto.getContents(), userInfo.getUsername());
         return postService.createPost(createPostDto);
     }
@@ -53,7 +60,13 @@ public class PostController {
     @PutMapping("/posts/{id}")
     public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
+        if(token == null){
+            throw new NotAuthorizedException("토큰이 존재하지 않습니다.");
+        }
         AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
+        if(userInfo.getTokenType().equals(TokenType.REFRESH)){
+            throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
+        }
         UpdatePostDto updatePostDto = new UpdatePostDto(id, postRequestDto.getContents(), userInfo.getUsername());
         return postService.updatePost(updatePostDto);
     }
@@ -62,7 +75,13 @@ public class PostController {
     @DeleteMapping("/posts/{id}")
     public String deletePost(@PathVariable Long id, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
+        if(token == null){
+            throw new NotAuthorizedException("토큰이 존재하지 않습니다.");
+        }
         AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
+        if(userInfo.getTokenType().equals(TokenType.REFRESH)){
+            throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
+        }
         DeletePostDto deletePostDto = new DeletePostDto(id, userInfo.getUsername());
         postService.deletePost(deletePostDto);
         return "게시글 삭제에 성공했습니다.";
@@ -71,7 +90,13 @@ public class PostController {
     @PutMapping("/admin/posts/{id}")
     public PostResponseDto adminUpdatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
+        if(token == null){
+            throw new NotAuthorizedException("토큰이 존재하지 않습니다.");
+        }
         AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
+        if(userInfo.getTokenType().equals(TokenType.REFRESH)){
+            throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
+        }
         if(userInfo.getRole().equals(UserRoleEnum.USER)){
             throw new NotAuthorizedException("업데이트 권한이 없습니다.");
         }
@@ -82,7 +107,13 @@ public class PostController {
     @DeleteMapping("/admin/posts/{id}")
     public String adminDelete(@PathVariable Long id, HttpServletRequest request){
         String token = jwtUtil.resolveToken(request);
+        if(token == null){
+            throw new NotAuthorizedException("토큰이 존재하지 않습니다.");
+        }
         AuthorizedUserInfo userInfo = authorizationService.getAuthorizedUserInfo(token);
+        if(userInfo.getTokenType().equals(TokenType.REFRESH)){
+            throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
+        }
         if(userInfo.getRole().equals(UserRoleEnum.USER)){
             throw new NotAuthorizedException("업데이트 권한이 없습니다.");
         }
