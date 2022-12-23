@@ -7,14 +7,12 @@ import com.app.api.entity.User;
 import com.app.api.entity.UserRefreshToken;
 import com.app.api.exception.DuplicateDataException;
 import com.app.api.exception.NotFoundException;
-import com.app.api.repository.AuthorizationRepository;
 import com.app.api.repository.UserRepository;
 import com.app.api.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -22,7 +20,6 @@ import java.util.Optional;
 public class UserService implements UserServiceInterface {
 
     private final UserRepository userRepository;
-    private final AuthorizationRepository authorizationRepository;
     private final JwtUtil jwtUtil;
     @Override
     @Transactional
@@ -55,19 +52,6 @@ public class UserService implements UserServiceInterface {
             throw new NotFoundException("회원을 찾을 수 없습니다.");
         }
 
-        JwtInfo jwtInfo = jwtUtil.getAuthorizedTokens(user.getUsername(), user.getRole());
-        Optional<UserRefreshToken> userRefreshToken = authorizationRepository.findByUser_Id(user.getId());
-
-        // if already has data in db, update only token.
-        if(userRefreshToken.isPresent()){
-            userRefreshToken.get().updateToken(jwtInfo.getRefreshToken());
-        }
-        // if not data in db, create info.
-        else{
-            UserRefreshToken newUserRefreshToken = new UserRefreshToken(jwtInfo.getRefreshToken(),user);
-            authorizationRepository.save(newUserRefreshToken);
-        }
-
-        return jwtInfo;
+        return jwtUtil.getAuthorizedTokens(user.getUsername(), user.getRole());
     }
 }

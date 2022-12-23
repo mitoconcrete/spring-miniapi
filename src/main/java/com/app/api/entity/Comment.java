@@ -20,13 +20,11 @@ public class Comment extends Timestamped{
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String writer;
 
-    public Comment(Post post, User user, String contents) {
+    public Comment(Post post, String username, String contents) {
         this.post = post;
-        this.user = user;
+        this.writer = username;
         this.contents = contents;
     }
 
@@ -34,7 +32,7 @@ public class Comment extends Timestamped{
         this.contents = contents;
     }
 
-    public boolean isAuthorIdMatchUserId(Long userId){
-        return this.user.getId().equals(userId);
+    public boolean isWriterMatch(String username){
+        return this.writer.equals(username);
     }
 }
