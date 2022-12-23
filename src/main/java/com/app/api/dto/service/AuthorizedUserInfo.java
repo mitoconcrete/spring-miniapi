@@ -1,0 +1,14 @@
+package com.app.api.dto.service;
+
+import com.app.api.entity.UserRoleEnum;
+import com.app.api.utils.TokenType;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public class AuthorizedUser {
+    private final String username;
+    private final UserRoleEnum role;
+    private final TokenType tokenType;
+}
