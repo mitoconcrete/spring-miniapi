@@ -23,14 +23,8 @@ public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_KEY = "auth";
+    public static final String TOKEN_KEY = "token_type";
     private static final String BEARER_PREFIX = "Bearer";
-
-    // 2hrs
-    private static final Long ACCESS_TOKEN_TIME = 1000L * 60 * 60 * 2;
-
-    // 30days
-    private static final Long REFRESH_TOKEN_TIME = 1000L * 60 * 60 * 24 * 30;
-
     @Value("${jwt.secret.key}")
     private String secretKey;
     private Key key;
@@ -50,19 +44,12 @@ public class JwtUtil {
         throw new IllegalArgumentException("유저를 인증 할 수 없습니다.");
     }
 
-    public String createAccessToken(String username, UserRoleEnum role){
-        return createToken(username, role, ACCESS_TOKEN_TIME);
-    }
-
-    public String createRefreshToken(String username, UserRoleEnum role){
-        return createToken(username, role, REFRESH_TOKEN_TIME);
-    }
-
-    private String createToken(String username, UserRoleEnum role, Long expirationTime) {
+    private String createToken(String username, UserRoleEnum role, TokenType type, Long expirationTime) {
         Date date = new Date();
 
         return Jwts.builder()
                 .setSubject(username)
+                .claim(TOKEN_KEY, type)
                 .claim(AUTHORIZATION_KEY, role)
                 .setExpiration(new Date(date.getTime() + expirationTime))
                 .signWith(key, signatureAlgorithm)
@@ -87,8 +74,13 @@ public class JwtUtil {
     }
 
     public JwtInfo getAuthorizedTokens(String username, UserRoleEnum role){
-        String accessToken = createAccessToken(username, role);
-        String refreshToken = createRefreshToken(username, role);
+        // 2hrs
+        final Long ACCESS_TOKEN_TIME = 1000L * 60 * 60 * 2;
+
+        // 30days
+        final Long REFRESH_TOKEN_TIME = 1000L * 60 * 60 * 24 * 30;
+        String accessToken = createToken(username, role, TokenType.ACCESS, ACCESS_TOKEN_TIME);
+        String refreshToken = createToken(username, role, TokenType.REFRESH, REFRESH_TOKEN_TIME);
         return new JwtInfo(BEARER_PREFIX, accessToken, refreshToken);
     }
 
