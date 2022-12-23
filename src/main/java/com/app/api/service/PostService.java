@@ -1,23 +1,18 @@
 package com.app.api.service;
 
-import com.app.api.dto.request.PostRequestDto;
 import com.app.api.dto.response.PostResponseDto;
 import com.app.api.dto.service.*;
 import com.app.api.entity.Post;
-import com.app.api.entity.User;
-import com.app.api.entity.UserRefreshToken;
+
 import com.app.api.exception.NotAuthorizedException;
 import com.app.api.exception.NotFoundException;
 import com.app.api.repository.PostRepository;
-import com.app.api.repository.UserRepository;
-import com.app.api.utils.JwtUtil;
-import io.jsonwebtoken.Claims;
+
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.Update;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
