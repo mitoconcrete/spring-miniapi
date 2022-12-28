@@ -21,7 +21,7 @@ public class AuthorizationService implements AuthorizationServiceInterface{
         if(jwtUtil.validateToken(token)){
             Claims claims = jwtUtil.getUserInfoFromToken(token);
             UserRoleEnum role = UserRoleEnum.valueOf(claims.get(JwtUtil.AUTHORIZATION_KEY).toString());
-            TokenType tokenType = TokenType.valueOf(claims.get(JwtUtil.AUTHORIZATION_KEY).toString());
+            TokenType tokenType = TokenType.valueOf(claims.get(JwtUtil.TOKEN_KEY).toString());
             return new AuthorizedUserInfo(claims.getSubject(), role, tokenType);
         }else{
             throw new IllegalArgumentException("토큰이 유효하지 않습니다.");
