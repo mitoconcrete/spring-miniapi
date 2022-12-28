@@ -23,7 +23,7 @@ public class AuthorizationController {
     @GetMapping("/token/renew")
     @ApiOperation(value = "토큰 재발급", notes = "Refresh Token 을 전달하여 새로운 토큰을 발급 받습니다.")
     public AuthorizedResponse getRenewTokens(HttpServletRequest request){
-        String token = jwtUtil.resolveToken(request);
+        String token = jwtUtil.resolveToken(request).get();
         return new AuthorizedResponse(HttpStatus.OK, "토큰이 재발급 되었습니다.", authorizationService.getRenewTokens(token));
     }
 }

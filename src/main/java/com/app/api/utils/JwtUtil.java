@@ -7,6 +7,9 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -36,12 +40,12 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String resolveToken(HttpServletRequest request) {
+    public Optional<String> resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+            return Optional.of(bearerToken.substring(7));
         }
-        throw new IllegalArgumentException("유저를 인증 할 수 없습니다.");
+        return Optional.empty();
     }
 
     private String createToken(String username, UserRoleEnum role, TokenType type, Long expirationTime) {
@@ -83,5 +87,4 @@ public class JwtUtil {
         String refreshToken = createToken(username, role, TokenType.REFRESH, REFRESH_TOKEN_TIME);
         return new JwtInfo(BEARER_PREFIX, accessToken, refreshToken);
     }
-
 }

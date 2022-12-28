@@ -2,6 +2,7 @@ package com.app.api.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -45,8 +46,7 @@ public class SwaggerConfig {
                 .termsOfServiceUrl("")
                 .license("")
                 .licenseUrl("")
-                .build()
-                ;
+                .build();
     }
 
     private SecurityContext securityContext() {
