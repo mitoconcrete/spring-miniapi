@@ -58,9 +58,6 @@ public class CommentController {
     @Secured(UserRoleEnum.Authority.ADMIN)
     @PutMapping("/admin/posts/{postId}/comments/{commentId}")
     public CommentResponseDto adminUpdateComment(@PathVariable Long postId, @PathVariable Long commentId,@RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails.getUser().getRole().equals(UserRoleEnum.USER)){
-            throw new NotAuthorizedException("업데이트 권한이 없습니다.");
-        }
         AdminUpdateCommentDto updateCommentDto = new AdminUpdateCommentDto(postId, commentId, commentRequestDto.getContents());
         return commentService.adminUpdateComment(updateCommentDto);
     }
@@ -68,9 +65,6 @@ public class CommentController {
     @Secured(UserRoleEnum.Authority.ADMIN)
     @DeleteMapping("/admin/posts/{postId}/comments/{commentId}")
     public String adminDeleteComment(@PathVariable Long postId,@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails.getUser().getRole().equals(UserRoleEnum.USER)){
-            throw new NotAuthorizedException("업데이트 권한이 없습니다.");
-        }
         AdminDeleteCommentDto deleteCommentDto = new AdminDeleteCommentDto(postId, commentId);
         commentService.adminDeleteComment(deleteCommentDto);
         return "댓글 삭제에 성공했습니다.";

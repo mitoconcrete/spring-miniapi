@@ -67,9 +67,6 @@ public class PostController {
     @Secured(UserRoleEnum.Authority.ADMIN)
     @PutMapping("/admin/posts/{id}")
     public PostResponseDto adminUpdatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        if(userDetails.getUser().getRole().equals(UserRoleEnum.USER)){
-            throw new NotAuthorizedException("업데이트 권한이 없습니다.");
-        }
         AdminUpdatePostDto adminUpdatePostDto = new AdminUpdatePostDto(id, postRequestDto.getContents());
         return postService.adminUpdatePost(adminUpdatePostDto);
     }
@@ -77,9 +74,6 @@ public class PostController {
     @Secured(UserRoleEnum.Authority.ADMIN)
     @DeleteMapping("/admin/posts/{id}")
     public String adminDelete(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        if(userDetails.getUser().getRole().equals(UserRoleEnum.USER)){
-            throw new NotAuthorizedException("업데이트 권한이 없습니다.");
-        }
         postService.adminDeletePost(id);
         return "게시글 삭제에 성공했습니다.";
     }
