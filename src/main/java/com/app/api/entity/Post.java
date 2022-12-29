@@ -29,6 +29,9 @@ public class Post extends Timestamped{
     @OrderBy("modifiedAt desc")
     private final List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private final List<PostLike> likes = new ArrayList<>();
+
     public Post(String title, String contents, String username) {
         this.title = title;
         this.contents = contents;

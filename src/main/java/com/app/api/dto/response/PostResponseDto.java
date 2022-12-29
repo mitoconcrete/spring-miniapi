@@ -4,6 +4,7 @@ import com.app.api.entity.Post;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,13 +16,15 @@ public class PostResponseDto {
     private final LocalDateTime modifiedAt;
     private final String writer;
     private final List<CommentResponseDto> comments;
+    private final Long likeCounts;
 
-    public PostResponseDto(Post post) {
+    public PostResponseDto(Post post, Long likeCounts) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.contents = post.getContents();
         this.modifiedAt = post.getModifiedAt();
         this.writer = post.getWriter();
+        this.likeCounts = post.getLikes().stream().filter(like -> like.getIsRemoved().equals(false)).count();
         this.comments = post.getComments().stream().map(CommentResponseDto::new).collect(Collectors.toList());
     }
 

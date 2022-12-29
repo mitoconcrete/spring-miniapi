@@ -10,6 +10,7 @@ public class CommentResponseDto {
     private final Long postId;
     private final String username;
     private final String contents;
+    private final Long likeCounts;
     private final LocalDateTime modifiedAt;
 
     public CommentResponseDto(Comment comment) {
@@ -17,5 +18,6 @@ public class CommentResponseDto {
         this.username = comment.getWriter();
         this.contents = comment.getContents();
         this.modifiedAt = comment.getModifiedAt();
+        this.likeCounts = comment.getLikes().stream().filter(like -> like.getIsRemoved().equals(false)).count();
     }
 }

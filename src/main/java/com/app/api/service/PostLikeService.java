@@ -19,13 +19,6 @@ public class PostLikeService implements PostLikeServiceInterface{
     private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
 
-    @Override
-    public Long getLikes(Long postId) {
-        return postLikeRepository.countAllByPostIdAndIsRemovedFalse(postId).orElseThrow(
-                () -> new NotFoundException("게시물이 존재하지 않습니다.")
-        );
-    }
-
     private Optional<PostLike> _getLike(LikeServiceDto likeServiceDto){
         return postLikeRepository.findByPost_IdAndUsername(likeServiceDto.getId(), likeServiceDto.getUsername());
     }

@@ -22,13 +22,6 @@ public class CommentLikeService implements CommentLikeServiceInterface {
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
 
-    @Override
-    public Long getLikes(Long commentId) {
-        return commentLikeRepository.countAllByCommentIdAndIsRemovedFalse(commentId).orElseThrow(
-                () -> new NotFoundException("게시물이 존재하지 않습니다.")
-        );
-    }
-
     private Optional<CommentLike> _getLike(LikeServiceDto likeServiceDto) {
         return commentLikeRepository.findByComment_IdAndUsername(likeServiceDto.getId(), likeServiceDto.getUsername());
     }
