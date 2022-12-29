@@ -10,6 +10,7 @@ import com.app.api.exception.NotFoundException;
 import com.app.api.repository.UserRepository;
 import com.app.api.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface {
 
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     @Override
@@ -33,7 +35,7 @@ public class UserService implements UserServiceInterface {
         }
 
         // if not exist user in db, create new user by name, p/w, role.
-        User user = new User(userRequestDto.getUsername(), userRequestDto.getPassword(), userRequestDto.getRole());
+        User user = new User(userRequestDto.getUsername(), passwordEncoder.encode(userRequestDto.getPassword()), userRequestDto.getRole());
 
         // save in db.
         userRepository.save(user);
@@ -48,7 +50,7 @@ public class UserService implements UserServiceInterface {
         );
 
         // check password
-        if(!user.isPasswordValid(userRequestDto.getPassword())){
+        if(!passwordEncoder.matches(userRequestDto.getPassword(), user.getPassword())){
             throw new NotFoundException("회원을 찾을 수 없습니다.");
         }
 
