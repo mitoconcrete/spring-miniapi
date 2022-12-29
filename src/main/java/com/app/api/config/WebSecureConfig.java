@@ -65,7 +65,7 @@ public class WebSecureConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                .antMatchers( "/swagger-ui/**","/swagger-resources/**", "/v3/api-docs").permitAll()
+                .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .antMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/token/renew").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/signin").permitAll()
