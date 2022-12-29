@@ -1,5 +1,6 @@
 package com.app.api.config;
 
+import com.app.api.exception.CustomAuthenticationEntryPoint;
 import com.app.api.security.UserDetailsServiceImpl;
 import com.app.api.service.AuthorizationService;
 import com.app.api.utils.JwtAuthFilter;
@@ -29,6 +30,8 @@ public class WebSecureConfig {
     private final JwtUtil jwtUtil;
     private final AuthorizationService authorizationService;
     private final UserDetailsServiceImpl userDetailsService;
+
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     private static final String[] PERMIT_URL_ARRAY = {
             /* swagger v2 */
@@ -75,6 +78,8 @@ public class WebSecureConfig {
                 .addFilterBefore(new JwtAuthFilter(jwtUtil, authorizationService, userDetailsService), UsernamePasswordAuthenticationFilter.class);
 
         http.formLogin().disable();
+
+        http.exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint);
 
         return http.build();
     }
